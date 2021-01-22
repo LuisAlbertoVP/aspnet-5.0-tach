@@ -1,7 +1,5 @@
 using System;
 using System.Text;
-using System.Linq;
-using System.Linq.Dynamic.Core;
 
 namespace Tach.Models.Helpers {
     public class Filtro {
@@ -23,38 +21,33 @@ namespace Tach.Models.Helpers {
             return newCriterios;
         }
 
-        private IQueryable<T> AddCriterios<T>(IQueryable<T> query) {
-            var condicion = "";
-            for(var i = 0; i < this.Criterios.Count(); i++) {
-                condicion += $"{this.Id}.Contains(@{i})";
-                if(i < (this.Criterios.Count() - 1)) {
-                    condicion += " || ";
+        private string[] AddCriterios(StringBuilder builder, ref int cont) {
+            builder.Append('(');
+            for(var i = 0; i < this.Criterios.Length; i++) {
+                builder.Append($"{this.Id}.Contains(@{cont})");
+                if(i < (this.Criterios.Length - 1)) {
+                    builder.Append("||");
                 }
+                cont++;
             }
-            return query.Where(condicion, this.VerifyDate(this.Criterios));
-        }
-
-        public IQueryable<T> AddFiltros<T>(IQueryable<T> query) {
-            switch(this.Operador) {
-                case "between": return query.Where($"{this.Id} >= @0 && {this.Id} <= @1", this.VerifyDate(this.Criterio1, this.Criterio2));
-                case "like" : return query.Where($"{this.Id}.Contains(@0)", this.Criterio1);
-                case "multiple": return this.AddCriterios<T>(query);
-                default: return query.Where($"{this.Id} {this.Operador} @0", this.Criterio1); 
-            }
+            builder.Append(')');
+            return this.Criterios;
         }
 
         public dynamic[] AddFiltro(StringBuilder builder, ref int cont) {
             switch(this.Operador) {
+                case "multiple":
+                    return this.AddCriterios(builder, ref cont);
                 case "between":
-                    builder.Append($"{this.Id} >= @{cont} && {this.Id} <= @{cont + 1}").Append("&&");
+                    builder.Append($"({this.Id} >= @{cont} && {this.Id} <= @{cont + 1})");
                     cont = cont + 2;
                     return this.VerifyDate(this.Criterio1, this.Criterio2);
                 case "like" : 
-                    builder.Append($"{this.Id}.Contains(@{cont})").Append("&&");
+                    builder.Append($"{this.Id}.Contains(@{cont})");
                     cont++;
                     return new string[] { this.Criterio1 };
                 default: 
-                    builder.Append($"{this.Id} {this.Operador} @{cont}").Append("&&");
+                    builder.Append($"{this.Id} {this.Operador} @{cont}");
                     cont++;
                     return new string[] { this.Criterio1 };
             }

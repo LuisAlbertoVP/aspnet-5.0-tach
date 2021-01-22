@@ -17,20 +17,24 @@ namespace Tach.Models.Helpers {
 
         public string Estado { get; set; }
 
+        public string OperadorLogico { get; set; }
+
         public async Task<Model<T>> BuildModel<T>(IQueryable<T> query, string fields) {
             var builder = new StringBuilder();
             var filtros = new List<dynamic>();
-            if(this.Estado == "2") {
-                builder.Append("Estado == true || Estado == false").Append("&&");
-            } else {
-                builder.Append(string.Format("Estado == {0} &&", this.Estado == "1" ? true : false)).Append("&&");
-            }
             int cont = 0;
-            for(var i = 0; i < this.Filtros.Count(); i++) {
-                //query = this.Filtros[i].AddFiltro<T>(query);
+            if(this.Estado == "2") {
+                builder.Append("(Estado == true || Estado == false)");
+            } else {
+                builder.Append(string.Format("Estado == {0}", this.Estado == "1" ? true : false));
+            }
+            builder.Append("&&").Append("EstadoTabla == true").Append("&&");
+            for(var i = 0; i < this.Filtros.Length; i++) {
+                if(i > 0) {
+                    builder.Append(this.OperadorLogico);
+                }
                 filtros.AddRange(this.Filtros[i].AddFiltro(builder, ref cont));
             }
-            builder.Append("EstadoTabla == true");
             query = query.Where(builder.ToString(), filtros.ToArray()).OrderBy(this.Orden.ToString());
             var model = new Model<T>();
             model.Total = await query.CountAsync();
