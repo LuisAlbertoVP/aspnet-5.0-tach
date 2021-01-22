@@ -1,4 +1,5 @@
 using System;
+using System.Text;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 
@@ -33,12 +34,29 @@ namespace Tach.Models.Helpers {
             return query.Where(condicion, this.VerifyDate(this.Criterios));
         }
 
-        public IQueryable<T> AddFiltro<T>(IQueryable<T> query) {
+        public IQueryable<T> AddFiltros<T>(IQueryable<T> query) {
             switch(this.Operador) {
                 case "between": return query.Where($"{this.Id} >= @0 && {this.Id} <= @1", this.VerifyDate(this.Criterio1, this.Criterio2));
                 case "like" : return query.Where($"{this.Id}.Contains(@0)", this.Criterio1);
                 case "multiple": return this.AddCriterios<T>(query);
                 default: return query.Where($"{this.Id} {this.Operador} @0", this.Criterio1); 
+            }
+        }
+
+        public dynamic[] AddFiltro(StringBuilder builder, ref int cont) {
+            switch(this.Operador) {
+                case "between":
+                    builder.Append($"{this.Id} >= @{cont} && {this.Id} <= @{cont + 1}").Append("&&");
+                    cont = cont + 2;
+                    return this.VerifyDate(this.Criterio1, this.Criterio2);
+                case "like" : 
+                    builder.Append($"{this.Id}.Contains(@{cont})").Append("&&");
+                    cont++;
+                    return new string[] { this.Criterio1 };
+                default: 
+                    builder.Append($"{this.Id} {this.Operador} @{cont}").Append("&&");
+                    cont++;
+                    return new string[] { this.Criterio1 };
             }
         }
     }
