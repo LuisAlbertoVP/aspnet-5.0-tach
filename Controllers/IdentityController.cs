@@ -109,8 +109,9 @@ namespace Tach.Controllers
         [HttpGet("cuenta/{id}/roles")]
         [Authorize(AuthenticationSchemes="Autenticado")]
         public IActionResult GetRolUsuario(string id) {
-            var usuario = _context.Usuarios.Where("Estado == true").Where("EstadoTabla == true").Where("Id == @0", id)
-                .Select("new(Roles.Select(new(Modulos)) as Roles)").FirstOrDefault();
+            var usuario = _context.Usuarios.Where("Estado == true && EstadoTabla == true && Id == @0", id)
+                .Select("new(Roles.Where(Estado == true && EstadoTabla == true).Select(new(Modulos)) as Roles)")
+                .FirstOrDefault();
             return Ok(usuario);
         }
     }

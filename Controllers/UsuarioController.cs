@@ -23,7 +23,7 @@ namespace Tach.Controllers
 
         [HttpGet("form")]
         public async Task<IActionResult> GetForm() {
-            var roles = await _context.Roles.Where("Estado == true").Where("EstadoTabla == true")
+            var roles = await _context.Roles.Where("Estado == true && EstadoTabla == true")
                 .OrderBy("Descripcion").Select<Rol>("new(Id, Descripcion)").ToListAsync();
             return Ok(new { roles = roles });
         }

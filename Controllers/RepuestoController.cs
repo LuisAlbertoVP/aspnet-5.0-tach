@@ -23,9 +23,9 @@ namespace Tach.Controllers
 
         [HttpGet("form")]
         public async Task<IActionResult> GetForm() {
-            var categorias = await _context.Categorias.Where("Estado == true").Where("EstadoTabla == true")
+            var categorias = await _context.Categorias.Where("Estado == true && EstadoTabla == true")
                 .OrderBy("Descripcion").Select<Categoria>("new(Id, Descripcion)").ToListAsync();
-            var marcas = await _context.Marcas.Where("Estado == true").Where("EstadoTabla == true")
+            var marcas = await _context.Marcas.Where("Estado == true && EstadoTabla == true")
                 .OrderBy("Descripcion").Select<Marca>("new(Id, Descripcion)").ToListAsync();
             return Ok(new { marcas = marcas, categorias = categorias });
         }

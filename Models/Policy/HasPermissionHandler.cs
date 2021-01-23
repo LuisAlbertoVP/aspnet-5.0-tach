@@ -22,8 +22,9 @@ namespace Tach.Models.Policy {
             using var scope = _serviceProvider.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<TachContext>();
             var usuario = _context.Usuarios.Where("Estado == true").Where("EstadoTabla == true").Where("Id == @0", id)
-                .Select(u => new Usuario { Roles = u.Roles.Select(r => new Rol { Modulos = r.Modulos }).ToList()})
-                .FirstOrDefault();
+                .Select(u => new Usuario { 
+                    Roles = u.Roles.Where(r => r.Estado == true && r.EstadoTabla == true).Select(r => new Rol { Modulos = r.Modulos }).ToList()
+                }).FirstOrDefault();
             if(usuario != null) {
                 foreach(var rol in usuario.Roles) {
                     foreach(var modulo in rol.Modulos) {
