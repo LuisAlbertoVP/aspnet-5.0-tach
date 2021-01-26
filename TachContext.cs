@@ -47,6 +47,7 @@ namespace Tach
             modelBuilder.Entity<Repuesto>().Property(r => r.Codigo).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Repuesto>().Property(r => r.Modelo).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Repuesto>().Property(r => r.Epoca).HasMaxLength(50);
+            modelBuilder.Entity<Repuesto>().Property(r => r.SubMarca).HasMaxLength(50);
             modelBuilder.Entity<Repuesto>().Property(r => r.UsuarioIngreso).HasMaxLength(10);
             modelBuilder.Entity<Repuesto>().Property(r => r.UsuarioModificacion).HasMaxLength(10);
 

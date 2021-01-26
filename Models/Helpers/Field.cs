@@ -15,7 +15,7 @@ namespace Tach.Models.Helpers {
 
         public static string Repuestos { 
             get { 
-                return "new(Id, Codigo, Marca, Categoria, Modelo, Epoca, Stock, Precio, Descripcion, Estado,"
+                return "new(Id, Codigo, Marca, Categoria, Modelo, Epoca, SubMarca, Stock, Precio, Descripcion, Estado,"
                     + "UsuarioIngreso, FechaIngreso, UsuarioModificacion, FechaModificacion)"; 
             }
         }

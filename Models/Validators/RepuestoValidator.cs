@@ -10,6 +10,7 @@ namespace Tach.Models.Validators {
             RuleFor(repuesto => repuesto.Categoria.Id).NotNull().When(repuesto => repuesto.Categoria != null);
             RuleFor(repuesto => repuesto.Modelo).NotNull().MaximumLength(50);
             RuleFor(repuesto => repuesto.Epoca).MaximumLength(50);
+            RuleFor(repuesto => repuesto.SubMarca).MaximumLength(50);
             RuleFor(repuesto => repuesto.Stock).NotNull();
             RuleFor(repuesto => repuesto.Precio).NotNull();
         }

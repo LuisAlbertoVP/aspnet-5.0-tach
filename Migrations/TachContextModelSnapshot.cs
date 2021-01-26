@@ -238,6 +238,10 @@ namespace Tach.Migrations
                     b.Property<int>("Stock")
                         .HasColumnType("int");
 
+                    b.Property<string>("SubMarca")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
+
                     b.Property<string>("UsuarioIngreso")
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
