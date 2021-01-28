@@ -29,12 +29,14 @@ namespace Tach.Models.Helpers {
                 builder.Append(string.Format("Estado == {0}", this.Estado == "1" ? true : false));
             }
             builder.Append("&&").Append("EstadoTabla == true").Append("&&");
+            builder.Append('(');
             for(var i = 0; i < this.Filtros.Length; i++) {
                 if(i > 0) {
                     builder.Append(this.OperadorLogico);
                 }
                 filtros.AddRange(this.Filtros[i].AddFiltro(builder, ref cont));
             }
+            builder.Append(')');
             query = query.Where(builder.ToString(), filtros.ToArray()).OrderBy(this.Orden.ToString());
             var model = new Model<T>();
             model.Total = await query.CountAsync();
