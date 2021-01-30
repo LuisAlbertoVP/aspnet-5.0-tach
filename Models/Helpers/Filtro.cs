@@ -15,7 +15,7 @@ namespace Tach.Models.Helpers {
 
         public dynamic[] AddFiltro(StringBuilder builder, ref int cont) {
             if(this.Operador == "between") {
-                this.AppendQuery(builder, cont);
+                builder.Append($"({this.Id} >= @{cont} && {this.Id} <= @{cont + 1})");
                 cont = cont + 2;
                 return this.VerifyDate(this.Criterio1, this.Criterio2);
             } else {
@@ -26,19 +26,20 @@ namespace Tach.Models.Helpers {
         private string[] AddCriterios(StringBuilder builder, ref int cont) {
             builder.Append('(');
             for(var i = 0; i < this.Criterios.Length; i++) {
-                this.AppendQuery(builder, cont);
-                this.VerifyLastIndex(i, builder);
+                this.VerifyLastIndex(i, builder, this.AppendQuery(builder, cont));
                 cont++;
             }
             builder.Append(')');
             return this.Criterios;
         }
 
-        private void AppendQuery(StringBuilder builder, int cont) {
-            switch(this.Operador) {
-                case "between": builder.Append($"({this.Id} >= @{cont} && {this.Id} <= @{cont + 1})"); break;
-                case "contiene": builder.Append($"{this.Id}.Contains(@{cont})"); break;
-                default: builder.Append($"{this.Id} {this.Operador} @{cont}"); break;
+        private string AppendQuery(StringBuilder builder, int cont) {
+            if(this.Operador == "contiene") {
+                builder.Append($"{this.Id}.Contains(@{cont})");
+                return "||";
+            } else {
+                builder.Append($"{this.Id} {this.Operador} @{cont}");
+                return "&&";
             }
         }
 
@@ -50,9 +51,9 @@ namespace Tach.Models.Helpers {
             return newCriterios;
         }
 
-        private void VerifyLastIndex(int index, StringBuilder builder) {
+        private void VerifyLastIndex(int index, StringBuilder builder, string operador) {
             if(index < (this.Criterios.Length - 1)) {
-                builder.Append("||");
+                builder.Append(operador);
             }
         }
     }
