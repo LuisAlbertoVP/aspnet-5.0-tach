@@ -13,6 +13,35 @@ namespace Tach.Models.Helpers {
 
         public string Operador { get; set; }
 
+        public dynamic[] AddFiltro(StringBuilder builder, ref int cont) {
+            if(this.Operador == "between") {
+                this.AppendQuery(builder, cont);
+                cont = cont + 2;
+                return this.VerifyDate(this.Criterio1, this.Criterio2);
+            } else {
+                return this.AddCriterios(builder, ref cont);
+            }
+        }
+
+        private string[] AddCriterios(StringBuilder builder, ref int cont) {
+            builder.Append('(');
+            for(var i = 0; i < this.Criterios.Length; i++) {
+                this.AppendQuery(builder, cont);
+                this.VerifyLastIndex(i, builder);
+                cont++;
+            }
+            builder.Append(')');
+            return this.Criterios;
+        }
+
+        private void AppendQuery(StringBuilder builder, int cont) {
+            switch(this.Operador) {
+                case "between": builder.Append($"({this.Id} >= @{cont} && {this.Id} <= @{cont + 1})"); break;
+                case "contiene": builder.Append($"{this.Id}.Contains(@{cont})"); break;
+                default: builder.Append($"{this.Id} {this.Operador} @{cont}"); break;
+            }
+        }
+
         private dynamic[] VerifyDate(params string[] criterios) {
             var newCriterios = new dynamic[criterios.Length];
             for(var i = 0; i < criterios.Length; i++) {
@@ -21,35 +50,9 @@ namespace Tach.Models.Helpers {
             return newCriterios;
         }
 
-        private string[] AddCriterios(StringBuilder builder, ref int cont) {
-            builder.Append('(');
-            for(var i = 0; i < this.Criterios.Length; i++) {
-                builder.Append($"{this.Id}.Contains(@{cont})");
-                if(i < (this.Criterios.Length - 1)) {
-                    builder.Append("||");
-                }
-                cont++;
-            }
-            builder.Append(')');
-            return this.Criterios;
-        }
-
-        public dynamic[] AddFiltro(StringBuilder builder, ref int cont) {
-            switch(this.Operador) {
-                case "multiple":
-                    return this.AddCriterios(builder, ref cont);
-                case "between":
-                    builder.Append($"({this.Id} >= @{cont} && {this.Id} <= @{cont + 1})");
-                    cont = cont + 2;
-                    return this.VerifyDate(this.Criterio1, this.Criterio2);
-                case "like" : 
-                    builder.Append($"{this.Id}.Contains(@{cont})");
-                    cont++;
-                    return new string[] { this.Criterio1 };
-                default: 
-                    builder.Append($"{this.Id} {this.Operador} @{cont}");
-                    cont++;
-                    return new string[] { this.Criterio1 };
+        private void VerifyLastIndex(int index, StringBuilder builder) {
+            if(index < (this.Criterios.Length - 1)) {
+                builder.Append("||");
             }
         }
     }
