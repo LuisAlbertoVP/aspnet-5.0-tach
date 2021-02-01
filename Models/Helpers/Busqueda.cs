@@ -23,11 +23,7 @@ namespace Tach.Models.Helpers {
             var builder = new StringBuilder();
             var filtros = new List<dynamic>();
             int cont = 0;
-            if(this.Estado == "2") {
-                builder.Append("(Estado == true || Estado == false)");
-            } else {
-                builder.Append(string.Format("Estado == {0}", this.Estado == "1" ? true : false));
-            }
+            builder.Append(string.Format("Estado == {0}", this.Estado == "1" ? true : false));
             builder.Append("&&").Append("EstadoTabla == true").Append("&&");
             builder.Append('(');
             for(var i = 0; i < this.Filtros.Length; i++) {
