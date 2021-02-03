@@ -1,7 +1,6 @@
-using System.Text.Json;
-
 namespace Tach.Models.Entities {
     public class Proveedor : Entity {
+
         public string Id { get; set; }
 
         public string Descripcion { get; set; }
@@ -20,12 +19,5 @@ namespace Tach.Models.Entities {
 
         public string CorreoContacto { get; set; }
 
-        public string ToJSON() {
-            var serializeOptions = new JsonSerializerOptions {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true
-            };
-            return JsonSerializer.Serialize(this, serializeOptions);
-        }
     }
 }

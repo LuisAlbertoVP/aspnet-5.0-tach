@@ -30,7 +30,7 @@ namespace Tach.Controllers
             if(new RolValidator().Validate(rol).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL AddRol({0})", rol.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL AddRol({0})", JSON.Parse<Rol>(rol));
                     transaction.Commit();
                     return Ok(new Response { Result = "Rol actualizado correctamente" });
                 } catch (Exception) {

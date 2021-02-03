@@ -30,7 +30,7 @@ namespace Tach.Controllers
             if(new ProveedorValidator().Validate(proveedor).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL AddProveedor({0})", proveedor.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL AddProveedor({0})", JSON.Parse<Proveedor>(proveedor));
                     transaction.Commit();
                     return Ok(new Response { Result = "Proveedor actualizado correctamente" });
                 } catch (Exception) {

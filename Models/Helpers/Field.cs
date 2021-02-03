@@ -1,5 +1,6 @@
 namespace Tach.Models.Helpers {
     public struct Field {
+        
         public static string Usuarios { 
             get { 
                 return "new(Id, NombreUsuario, Nombres, Cedula, Direccion, Telefono, Celular, FechaNacimiento, Correo, Roles,"

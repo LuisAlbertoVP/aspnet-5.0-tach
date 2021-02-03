@@ -1,5 +1,7 @@
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Tach.Models.Entities;
+using System;
 
 namespace Tach
 {
@@ -7,34 +9,41 @@ namespace Tach
     {
         public TachContext (DbContextOptions<TachContext> options) : base(options) {}
 
-        public DbSet<Usuario> Usuarios { get; set; }
-        
-        public DbSet<Rol> Roles { get; set; }
-
-        public DbSet<Repuesto> Repuestos { get; set; }
-
         public DbSet<Categoria> Categorias { get; set; }
+
+        public DbSet<Cliente> Clientes { get; set; }
+
+        public DbSet<Compra> Compras { get; set; }
 
         public DbSet<Marca> Marcas { get; set; }
 
-        public DbSet<Proveedor> Proveedores { get; set; }
-
         public DbSet<Modulo> Modulos { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) {
-            modelBuilder.Entity<Usuario>().Property(u => u.NombreUsuario).IsRequired().HasMaxLength(10);
-            modelBuilder.Entity<Usuario>().Property(u => u.Nombres).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Usuario>().Property(u => u.Clave).IsRequired();
-            modelBuilder.Entity<Usuario>().Property(u => u.Cedula).IsRequired().HasMaxLength(10);
-            modelBuilder.Entity<Usuario>().Property(u => u.Direccion).IsRequired();
-            modelBuilder.Entity<Usuario>().Property(u => u.Telefono).IsRequired().HasMaxLength(25);
-            modelBuilder.Entity<Usuario>().Property(u => u.Celular).IsRequired().HasMaxLength(25);
-            modelBuilder.Entity<Usuario>().Property(u => u.FechaNacimiento).IsRequired().HasColumnType("date");
-            modelBuilder.Entity<Usuario>().Property(u => u.Correo).IsRequired().HasMaxLength(320);
-            modelBuilder.Entity<Usuario>().Property(u => u.FechaContratacion).IsRequired().HasColumnType("date");
-            modelBuilder.Entity<Usuario>().Property(u => u.UsuarioIngreso).HasMaxLength(10);
-            modelBuilder.Entity<Usuario>().Property(u => u.UsuarioModificacion).HasMaxLength(10);
+        public DbSet<Proveedor> Proveedores { get; set; }
 
+        public DbSet<Repuesto> Repuestos { get; set; }
+
+        public DbSet<Rol> Roles { get; set; }
+
+        public DbSet<Usuario> Usuarios { get; set; }
+
+        public DbSet<Venta> Ventas { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<Categoria>().Property(c => c.Descripcion).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<Categoria>().Ignore(c => c.Stock);
+            modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Categoria>());
+
+            modelBuilder.Entity<Cliente>().Property(c => c.TipoCliente).IsRequired().HasMaxLength(25);
+            modelBuilder.ApplyConfiguration(new PersonTypeConfiguration<Cliente>());
+
+            modelBuilder.Entity<Compra>().Property(c => c.UsuarioIngreso).IsRequired().HasMaxLength(10);
+            modelBuilder.Entity<Compra>().Property(c => c.FechaIngreso).IsRequired();
+
+            modelBuilder.Entity<Marca>().Property(m => m.Descripcion).IsRequired().HasMaxLength(50);
+            modelBuilder.Entity<Marca>().Ignore(m => m.Stock);
+            modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Marca>());
+            
             modelBuilder.Entity<Proveedor>().Property(p => p.Descripcion).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Proveedor>().Property(p => p.Telefono).HasMaxLength(25);
             modelBuilder.Entity<Proveedor>().Property(p => p.TipoProveedor).HasMaxLength(100);
@@ -43,27 +52,45 @@ namespace Tach
             modelBuilder.Entity<Proveedor>().Property(p => p.CorreoContacto).HasMaxLength(320);
             modelBuilder.Entity<Proveedor>().Property(p => p.UsuarioIngreso).HasMaxLength(10);
             modelBuilder.Entity<Proveedor>().Property(p => p.UsuarioModificacion).HasMaxLength(10);
+            modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Proveedor>());
 
             modelBuilder.Entity<Repuesto>().Property(r => r.Codigo).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Repuesto>().Property(r => r.Modelo).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Repuesto>().Property(r => r.Epoca).HasMaxLength(50);
             modelBuilder.Entity<Repuesto>().Property(r => r.SubMarca).HasMaxLength(50);
-            modelBuilder.Entity<Repuesto>().Property(r => r.UsuarioIngreso).HasMaxLength(10);
-            modelBuilder.Entity<Repuesto>().Property(r => r.UsuarioModificacion).HasMaxLength(10);
-
-            modelBuilder.Entity<Categoria>().Property(c => c.Descripcion).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Categoria>().Property(c => c.UsuarioIngreso).HasMaxLength(10);
-            modelBuilder.Entity<Categoria>().Property(c => c.UsuarioModificacion).HasMaxLength(10);
-            modelBuilder.Entity<Categoria>().Ignore(c => c.Stock);
-
-            modelBuilder.Entity<Marca>().Property(m => m.Descripcion).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Marca>().Property(m => m.UsuarioIngreso).HasMaxLength(10);
-            modelBuilder.Entity<Marca>().Property(m => m.UsuarioModificacion).HasMaxLength(10);
-            modelBuilder.Entity<Marca>().Ignore(m => m.Stock);
+            modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Repuesto>());
 
             modelBuilder.Entity<Rol>().Property(r => r.Descripcion).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Rol>().Property(r => r.UsuarioIngreso).HasMaxLength(10);
-            modelBuilder.Entity<Rol>().Property(r => r.UsuarioModificacion).HasMaxLength(10);
+            modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Rol>());
+
+            modelBuilder.Entity<Usuario>().Property(u => u.NombreUsuario).IsRequired().HasMaxLength(10);
+            modelBuilder.Entity<Usuario>().Property(u => u.Clave).IsRequired();
+            modelBuilder.Entity<Usuario>().Property(u => u.FechaContratacion).IsRequired().HasColumnType("date");
+            modelBuilder.ApplyConfiguration(new PersonTypeConfiguration<Usuario>());
+
+
+            modelBuilder.Entity<Venta>().Property(v => v.UsuarioIngreso).IsRequired().HasMaxLength(10);
+            modelBuilder.Entity<Venta>().Property(v => v.FechaIngreso).IsRequired();
+        }
+    }
+
+    public class EntityTypeConfiguration<T> : IEntityTypeConfiguration<T> where T : class {
+        public virtual void Configure(EntityTypeBuilder<T> builder) {
+            builder.Property<string>("UsuarioIngreso").HasMaxLength(10);
+            builder.Property<string>("UsuarioModificacion").HasMaxLength(10);
+        }
+    }
+
+    public class PersonTypeConfiguration<T> : EntityTypeConfiguration<T> where T : class {
+        public override void Configure(EntityTypeBuilder<T> builder) {
+            builder.Property<string>("Nombres").IsRequired().HasMaxLength(50);
+            builder.Property<string>("Cedula").IsRequired().HasMaxLength(10);
+            builder.Property<string>("Direccion").IsRequired();
+            builder.Property<string>("Telefono").IsRequired().HasMaxLength(25);
+            builder.Property<string>("Celular").IsRequired().HasMaxLength(25);
+            builder.Property<DateTime>("FechaNacimiento").IsRequired().HasColumnType("date");
+            builder.Property<string>("Correo").IsRequired().HasMaxLength(320);
+            base.Configure(builder);
         }
     }
 }

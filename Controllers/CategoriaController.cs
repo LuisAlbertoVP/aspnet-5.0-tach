@@ -30,7 +30,7 @@ namespace Tach.Controllers
             if(new CategoriaValidator().Validate(categoria).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL AddCategoria({0})", categoria.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL AddCategoria({0})", JSON.Parse<Categoria>(categoria));
                     transaction.Commit();
                     return Ok(new Response { Result = "Categoría actualizada correctamente" });
                 } catch (Exception) {

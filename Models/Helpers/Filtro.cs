@@ -3,6 +3,7 @@ using System.Text;
 
 namespace Tach.Models.Helpers {
     public class Filtro {
+        
         public string Id { get; set; }
 
         public string Criterio1 { get; set; }

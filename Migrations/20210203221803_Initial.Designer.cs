@@ -9,7 +9,7 @@ using Tach;
 namespace Tach.Migrations
 {
     [DbContext(typeof(TachContext))]
-    [Migration("20210125211302_Initial")]
+    [Migration("20210203221803_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,6 +18,21 @@ namespace Tach.Migrations
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.2");
+
+            modelBuilder.Entity("CompraRepuesto", b =>
+                {
+                    b.Property<string>("ComprasId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("RepuestosId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("ComprasId", "RepuestosId");
+
+                    b.HasIndex("RepuestosId");
+
+                    b.ToTable("CompraRepuesto");
+                });
 
             modelBuilder.Entity("ModuloRol", b =>
                 {
@@ -32,6 +47,21 @@ namespace Tach.Migrations
                     b.HasIndex("RolesId");
 
                     b.ToTable("ModuloRol");
+                });
+
+            modelBuilder.Entity("RepuestoVenta", b =>
+                {
+                    b.Property<string>("RepuestosId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("VentasId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.HasKey("RepuestosId", "VentasId");
+
+                    b.HasIndex("VentasId");
+
+                    b.ToTable("RepuestoVenta");
                 });
 
             modelBuilder.Entity("RolUsuario", b =>
@@ -82,6 +112,108 @@ namespace Tach.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categorias");
+                });
+
+            modelBuilder.Entity("Tach.Models.Entities.Cliente", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Cedula")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Celular")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Correo")
+                        .IsRequired()
+                        .HasMaxLength(320)
+                        .HasColumnType("varchar(320) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Direccion")
+                        .IsRequired()
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("EstadoTabla")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime?>("FechaIngreso")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaModificacion")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("FechaNacimiento")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Nombres")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Telefono")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("TipoCliente")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("UsuarioIngreso")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("UsuarioModificacion")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clientes");
+                });
+
+            modelBuilder.Entity("Tach.Models.Entities.Compra", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("FechaIngreso")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("ProveedorId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("double");
+
+                    b.Property<string>("UsuarioIngreso")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProveedorId");
+
+                    b.ToTable("Compras");
                 });
 
             modelBuilder.Entity("Tach.Models.Entities.Marca", b =>
@@ -373,6 +505,56 @@ namespace Tach.Migrations
                     b.ToTable("Usuarios");
                 });
 
+            modelBuilder.Entity("Tach.Models.Entities.Venta", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClienteId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Descripcion")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<bool>("Estado")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTime>("FechaIngreso")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<double>("Total")
+                        .HasColumnType("double");
+
+                    b.Property<string>("UsuarioIngreso")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClienteId");
+
+                    b.ToTable("Ventas");
+                });
+
+            modelBuilder.Entity("CompraRepuesto", b =>
+                {
+                    b.HasOne("Tach.Models.Entities.Compra", null)
+                        .WithMany()
+                        .HasForeignKey("ComprasId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tach.Models.Entities.Repuesto", null)
+                        .WithMany()
+                        .HasForeignKey("RepuestosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ModuloRol", b =>
                 {
                     b.HasOne("Tach.Models.Entities.Modulo", null)
@@ -384,6 +566,21 @@ namespace Tach.Migrations
                     b.HasOne("Tach.Models.Entities.Rol", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("RepuestoVenta", b =>
+                {
+                    b.HasOne("Tach.Models.Entities.Repuesto", null)
+                        .WithMany()
+                        .HasForeignKey("RepuestosId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tach.Models.Entities.Venta", null)
+                        .WithMany()
+                        .HasForeignKey("VentasId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -403,6 +600,15 @@ namespace Tach.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Tach.Models.Entities.Compra", b =>
+                {
+                    b.HasOne("Tach.Models.Entities.Proveedor", "Proveedor")
+                        .WithMany()
+                        .HasForeignKey("ProveedorId");
+
+                    b.Navigation("Proveedor");
+                });
+
             modelBuilder.Entity("Tach.Models.Entities.Repuesto", b =>
                 {
                     b.HasOne("Tach.Models.Entities.Categoria", "Categoria")
@@ -416,6 +622,15 @@ namespace Tach.Migrations
                     b.Navigation("Categoria");
 
                     b.Navigation("Marca");
+                });
+
+            modelBuilder.Entity("Tach.Models.Entities.Venta", b =>
+                {
+                    b.HasOne("Tach.Models.Entities.Cliente", "Cliente")
+                        .WithMany()
+                        .HasForeignKey("ClienteId");
+
+                    b.Navigation("Cliente");
                 });
 
             modelBuilder.Entity("Tach.Models.Entities.Categoria", b =>

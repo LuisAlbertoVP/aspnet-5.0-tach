@@ -40,7 +40,7 @@ namespace Tach.Controllers
             if(new RepuestoValidator().Validate(repuesto).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL AddRepuesto({0})", repuesto.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL AddRepuesto({0})", JSON.Parse<Repuesto>(repuesto));
                     transaction.Commit();
                     return Ok(new Response { Result = "Repuesto actualizado correctamente" });
                 } catch (Exception) {

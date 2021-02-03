@@ -65,7 +65,7 @@ namespace Tach.Controllers
             if(new CuentaValidator().Validate(usuario).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", usuario.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", JSON.Parse<Usuario>(usuario));
                     transaction.Commit();
                     return Ok(new Response { Result = "La cuenta ha sido creada satisfactoriamente, solicite su activación" });
                 } catch (Exception) {
@@ -83,7 +83,7 @@ namespace Tach.Controllers
             if(new CuentaValidator().Validate(usuario).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL UpdateAccount({0})", usuario.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL UpdateAccount({0})", JSON.Parse<Usuario>(usuario));
                     transaction.Commit();
                     return Ok(new Response { Result = "Cuenta actualizada correctamente" });
                 } catch (Exception) {

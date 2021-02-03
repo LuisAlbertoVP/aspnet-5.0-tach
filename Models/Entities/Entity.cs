@@ -2,6 +2,7 @@ using System;
 
 namespace Tach.Models.Entities {
     public class Entity {
+
         public bool Estado { get; set; }
 
         public bool EstadoTabla { get; set; }
@@ -13,5 +14,6 @@ namespace Tach.Models.Entities {
         public string UsuarioModificacion { get; set; }
 
         public DateTime? FechaModificacion { get; set; }
+        
     }
 }

@@ -27,6 +27,31 @@ namespace Tach.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Clientes",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    TipoCliente = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
+                    Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    EstadoTabla = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UsuarioModificacion = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
+                    FechaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Nombres = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false),
+                    Cedula = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
+                    Direccion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: false),
+                    Telefono = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
+                    Celular = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
+                    FechaNacimiento = table.Column<DateTime>(type: "date", nullable: false),
+                    Correo = table.Column<string>(type: "varchar(320) CHARACTER SET utf8mb4", maxLength: 320, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clientes", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Marcas",
                 columns: table => new
                 {
@@ -106,14 +131,7 @@ namespace Tach.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     NombreUsuario = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
-                    Nombres = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false),
                     Clave = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: false),
-                    Cedula = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
-                    Direccion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: false),
-                    Telefono = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
-                    Celular = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
-                    FechaNacimiento = table.Column<DateTime>(type: "date", nullable: false),
-                    Correo = table.Column<string>(type: "varchar(320) CHARACTER SET utf8mb4", maxLength: 320, nullable: false),
                     FechaContratacion = table.Column<DateTime>(type: "date", nullable: false),
                     Salario = table.Column<double>(type: "double", nullable: false),
                     Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -121,11 +139,42 @@ namespace Tach.Migrations
                     UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
                     FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     UsuarioModificacion = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
-                    FechaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true)
+                    FechaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Nombres = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false),
+                    Cedula = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
+                    Direccion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: false),
+                    Telefono = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
+                    Celular = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
+                    FechaNacimiento = table.Column<DateTime>(type: "date", nullable: false),
+                    Correo = table.Column<string>(type: "varchar(320) CHARACTER SET utf8mb4", maxLength: 320, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Usuarios", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Ventas",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    ClienteId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Total = table.Column<double>(type: "double", nullable: false),
+                    Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ventas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ventas_Clientes_ClienteId",
+                        column: x => x.ClienteId,
+                        principalTable: "Clientes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -162,6 +211,30 @@ namespace Tach.Migrations
                         name: "FK_Repuestos_Marcas_MarcaId",
                         column: x => x.MarcaId,
                         principalTable: "Marcas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Compras",
+                columns: table => new
+                {
+                    Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    ProveedorId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Total = table.Column<double>(type: "double", nullable: false),
+                    Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Compras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Compras_Proveedores_ProveedorId",
+                        column: x => x.ProveedorId,
+                        principalTable: "Proveedores",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -214,6 +287,64 @@ namespace Tach.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RepuestoVenta",
+                columns: table => new
+                {
+                    RepuestosId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    VentasId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RepuestoVenta", x => new { x.RepuestosId, x.VentasId });
+                    table.ForeignKey(
+                        name: "FK_RepuestoVenta_Repuestos_RepuestosId",
+                        column: x => x.RepuestosId,
+                        principalTable: "Repuestos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RepuestoVenta_Ventas_VentasId",
+                        column: x => x.VentasId,
+                        principalTable: "Ventas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CompraRepuesto",
+                columns: table => new
+                {
+                    ComprasId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    RepuestosId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompraRepuesto", x => new { x.ComprasId, x.RepuestosId });
+                    table.ForeignKey(
+                        name: "FK_CompraRepuesto_Compras_ComprasId",
+                        column: x => x.ComprasId,
+                        principalTable: "Compras",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CompraRepuesto_Repuestos_RepuestosId",
+                        column: x => x.RepuestosId,
+                        principalTable: "Repuestos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompraRepuesto_RepuestosId",
+                table: "CompraRepuesto",
+                column: "RepuestosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Compras_ProveedorId",
+                table: "Compras",
+                column: "ProveedorId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_ModuloRol_RolesId",
                 table: "ModuloRol",
@@ -230,27 +361,55 @@ namespace Tach.Migrations
                 column: "MarcaId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RepuestoVenta_VentasId",
+                table: "RepuestoVenta",
+                column: "VentasId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RolUsuario_UsuariosId",
                 table: "RolUsuario",
                 column: "UsuariosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Ventas_ClienteId",
+                table: "Ventas",
+                column: "ClienteId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "CompraRepuesto");
+
+            migrationBuilder.DropTable(
                 name: "ModuloRol");
 
             migrationBuilder.DropTable(
-                name: "Proveedores");
-
-            migrationBuilder.DropTable(
-                name: "Repuestos");
+                name: "RepuestoVenta");
 
             migrationBuilder.DropTable(
                 name: "RolUsuario");
 
             migrationBuilder.DropTable(
+                name: "Compras");
+
+            migrationBuilder.DropTable(
                 name: "Modulos");
+
+            migrationBuilder.DropTable(
+                name: "Repuestos");
+
+            migrationBuilder.DropTable(
+                name: "Ventas");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "Proveedores");
 
             migrationBuilder.DropTable(
                 name: "Categorias");
@@ -259,10 +418,7 @@ namespace Tach.Migrations
                 name: "Marcas");
 
             migrationBuilder.DropTable(
-                name: "Roles");
-
-            migrationBuilder.DropTable(
-                name: "Usuarios");
+                name: "Clientes");
         }
     }
 }

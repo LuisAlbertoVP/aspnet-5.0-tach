@@ -38,7 +38,7 @@ namespace Tach.Controllers
             if(new UsuarioValidator().Validate(usuario).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", usuario.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", JSON.Parse<Usuario>(usuario));
                     transaction.Commit();
                     return Ok(new Response { Result = "Usuario actualizado correctamente" });
                 } catch (Exception) {

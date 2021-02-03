@@ -1,7 +1,8 @@
-using System.Text.Json;
+using System.Collections.Generic;
 
 namespace Tach.Models.Entities {
     public class Repuesto : Entity {
+
         public string Id { get; set; }
 
         public string Codigo { get; set; }
@@ -22,12 +23,9 @@ namespace Tach.Models.Entities {
 
         public string Descripcion { get; set; }
 
-        public string ToJSON() {
-            var serializeOptions = new JsonSerializerOptions {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                WriteIndented = true
-            };
-            return JsonSerializer.Serialize(this, serializeOptions);
-        }
+        public ICollection<Compra> Compras { get; set; }
+
+        public ICollection<Venta> Ventas { get; set; }
+
     }
 }

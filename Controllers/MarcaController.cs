@@ -30,7 +30,7 @@ namespace Tach.Controllers
             if(new MarcaValidator().Validate(marca).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL AddMarca({0})", marca.ToJSON());
+                    _context.Database.ExecuteSqlRaw("CALL AddMarca({0})", JSON.Parse<Marca>(marca));
                     transaction.Commit();
                     return Ok(new Response { Result = "Marca actualizada correctamente" });
                 } catch (Exception) {

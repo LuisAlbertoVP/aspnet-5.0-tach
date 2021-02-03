@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Tach.Models.Helpers {
     public class Busqueda {
+        
         public Filtro[] Filtros { get; set; }
 
         public Orden Orden { get; set; }
