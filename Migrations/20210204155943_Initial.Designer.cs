@@ -9,7 +9,7 @@ using Tach;
 namespace Tach.Migrations
 {
     [DbContext(typeof(TachContext))]
-    [Migration("20210203221803_Initial")]
+    [Migration("20210204155943_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,21 +18,6 @@ namespace Tach.Migrations
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
                 .HasAnnotation("ProductVersion", "5.0.2");
-
-            modelBuilder.Entity("CompraRepuesto", b =>
-                {
-                    b.Property<string>("ComprasId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<string>("RepuestosId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.HasKey("ComprasId", "RepuestosId");
-
-                    b.HasIndex("RepuestosId");
-
-                    b.ToTable("CompraRepuesto");
-                });
 
             modelBuilder.Entity("ModuloRol", b =>
                 {
@@ -47,21 +32,6 @@ namespace Tach.Migrations
                     b.HasIndex("RolesId");
 
                     b.ToTable("ModuloRol");
-                });
-
-            modelBuilder.Entity("RepuestoVenta", b =>
-                {
-                    b.Property<string>("RepuestosId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<string>("VentasId")
-                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.HasKey("RepuestosId", "VentasId");
-
-                    b.HasIndex("VentasId");
-
-                    b.ToTable("RepuestoVenta");
                 });
 
             modelBuilder.Entity("RolUsuario", b =>
@@ -214,6 +184,24 @@ namespace Tach.Migrations
                     b.HasIndex("ProveedorId");
 
                     b.ToTable("Compras");
+                });
+
+            modelBuilder.Entity("Tach.Models.Entities.CompraDetalle", b =>
+                {
+                    b.Property<string>("CompraId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("RepuestoId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.HasKey("CompraId", "RepuestoId");
+
+                    b.HasIndex("RepuestoId");
+
+                    b.ToTable("CompraDetalle");
                 });
 
             modelBuilder.Entity("Tach.Models.Entities.Marca", b =>
@@ -540,19 +528,22 @@ namespace Tach.Migrations
                     b.ToTable("Ventas");
                 });
 
-            modelBuilder.Entity("CompraRepuesto", b =>
+            modelBuilder.Entity("Tach.Models.Entities.VentaDetalle", b =>
                 {
-                    b.HasOne("Tach.Models.Entities.Compra", null)
-                        .WithMany()
-                        .HasForeignKey("ComprasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("RepuestoId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.HasOne("Tach.Models.Entities.Repuesto", null)
-                        .WithMany()
-                        .HasForeignKey("RepuestosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<string>("VentaId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<int>("Cantidad")
+                        .HasColumnType("int");
+
+                    b.HasKey("RepuestoId", "VentaId");
+
+                    b.HasIndex("VentaId");
+
+                    b.ToTable("VentaDetalle");
                 });
 
             modelBuilder.Entity("ModuloRol", b =>
@@ -566,21 +557,6 @@ namespace Tach.Migrations
                     b.HasOne("Tach.Models.Entities.Rol", null)
                         .WithMany()
                         .HasForeignKey("RolesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("RepuestoVenta", b =>
-                {
-                    b.HasOne("Tach.Models.Entities.Repuesto", null)
-                        .WithMany()
-                        .HasForeignKey("RepuestosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Tach.Models.Entities.Venta", null)
-                        .WithMany()
-                        .HasForeignKey("VentasId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -609,6 +585,25 @@ namespace Tach.Migrations
                     b.Navigation("Proveedor");
                 });
 
+            modelBuilder.Entity("Tach.Models.Entities.CompraDetalle", b =>
+                {
+                    b.HasOne("Tach.Models.Entities.Compra", "Compra")
+                        .WithMany("CompraDetalle")
+                        .HasForeignKey("CompraId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tach.Models.Entities.Repuesto", "Repuesto")
+                        .WithMany("CompraDetalle")
+                        .HasForeignKey("RepuestoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Compra");
+
+                    b.Navigation("Repuesto");
+                });
+
             modelBuilder.Entity("Tach.Models.Entities.Repuesto", b =>
                 {
                     b.HasOne("Tach.Models.Entities.Categoria", "Categoria")
@@ -633,14 +628,50 @@ namespace Tach.Migrations
                     b.Navigation("Cliente");
                 });
 
+            modelBuilder.Entity("Tach.Models.Entities.VentaDetalle", b =>
+                {
+                    b.HasOne("Tach.Models.Entities.Repuesto", "Repuesto")
+                        .WithMany("VentaDetalle")
+                        .HasForeignKey("RepuestoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Tach.Models.Entities.Venta", "Venta")
+                        .WithMany("VentaDetalle")
+                        .HasForeignKey("VentaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Repuesto");
+
+                    b.Navigation("Venta");
+                });
+
             modelBuilder.Entity("Tach.Models.Entities.Categoria", b =>
                 {
                     b.Navigation("Repuestos");
                 });
 
+            modelBuilder.Entity("Tach.Models.Entities.Compra", b =>
+                {
+                    b.Navigation("CompraDetalle");
+                });
+
             modelBuilder.Entity("Tach.Models.Entities.Marca", b =>
                 {
                     b.Navigation("Repuestos");
+                });
+
+            modelBuilder.Entity("Tach.Models.Entities.Repuesto", b =>
+                {
+                    b.Navigation("CompraDetalle");
+
+                    b.Navigation("VentaDetalle");
+                });
+
+            modelBuilder.Entity("Tach.Models.Entities.Venta", b =>
+                {
+                    b.Navigation("VentaDetalle");
                 });
 #pragma warning restore 612, 618
         }

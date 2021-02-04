@@ -99,7 +99,7 @@ namespace Tach.Controllers
         [Authorize(AuthenticationSchemes="Autenticado")]
         public async Task<IActionResult> GetForm(string id) {
             var usuario = await _context.Usuarios.Where("Estado == true").Where("EstadoTabla == true").Where("Id == @0", id)
-                .Select<Usuario>("new(Id, NombreUsuario, Nombres, Cedula, Direccion, Telefono, Celular, FechaNacimiento, Correo)")
+                .Select<Usuario>("new(Id,NombreUsuario,Nombres,Cedula,Direccion,Telefono,Celular,FechaNacimiento,Correo)")
                 .FirstOrDefaultAsync();
             if(usuario != null)
                 return Ok(usuario);
@@ -108,11 +108,11 @@ namespace Tach.Controllers
 
         [HttpGet("cuenta/{id}/roles")]
         [Authorize(AuthenticationSchemes="Autenticado")]
-        public IActionResult GetRolUsuario(string id) {
-            var usuario = _context.Usuarios.Where("Estado == true && EstadoTabla == true && Id == @0", id)
+        public async Task<IActionResult> GetRolUsuario(string id) {
+            var usuario = await _context.Usuarios.Where("Estado == true && EstadoTabla == true && Id == @0", id)
                 .Select("new(Roles.Where(Estado == true && EstadoTabla == true).Select(new(Modulos)) as Roles)")
-                .FirstOrDefault();
-            return Ok(usuario);
+                .ToDynamicArrayAsync();
+            return Ok(usuario[0]);
         }
     }
 }

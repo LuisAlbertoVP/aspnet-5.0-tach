@@ -24,8 +24,18 @@ namespace Tach.Controllers
         [HttpGet("repuestos/{id}")]
         public async Task<IActionResult> GetRepuesto(string id) {
             var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
-                .Select<Repuesto>("new(Id, Codigo, Categoria, Marca, Modelo, Epoca, Precio)").FirstOrDefaultAsync();
-            return Ok(repuesto);
+                .Select("new(Id,Codigo,new(Categoria.Descripcion) as Categoria,new(Marca.Descripcion) as Marca,Modelo,Epoca,Precio)")
+                .ToDynamicArrayAsync();
+            return Ok(repuesto[0]);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVentas() {
+            string repuesto = $"Repuesto.Codigo,Repuesto.Categoria,Repuesto.Marca,Repuesto.Modelo";
+            var ventas =  await _context.Ventas.Where("Estado == true")
+                .Select($"new(Id,Cantidad,Total,VentaDetalle.Select(new(Cantidad,new({repuesto}) as Repuesto)) as VentaDetalle)")
+                .ToDynamicListAsync();
+            return Ok(ventas);
         }
 
         [HttpPost]

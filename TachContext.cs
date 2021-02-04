@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using Tach.Models.Entities;
 using System;
 
@@ -30,6 +31,24 @@ namespace Tach
         public DbSet<Venta> Ventas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
+            modelBuilder.Entity<CompraDetalle>()
+                .HasKey(c => new { c.CompraId, c.RepuestoId });
+
+            modelBuilder.Entity<CompraDetalle>().HasOne(ct => ct.Compra).WithMany(c => c.CompraDetalle)
+                .HasForeignKey(ct => ct.CompraId);
+
+            modelBuilder.Entity<CompraDetalle>().HasOne(ct => ct.Repuesto).WithMany(r => r.CompraDetalle)
+                .HasForeignKey(ct => ct.RepuestoId);
+
+            modelBuilder.Entity<VentaDetalle>()
+                .HasKey(v => new { v.RepuestoId, v.VentaId });
+
+            modelBuilder.Entity<VentaDetalle>().HasOne(vt => vt.Repuesto).WithMany(r => r.VentaDetalle)
+                .HasForeignKey(vt => vt.RepuestoId);
+
+            modelBuilder.Entity<VentaDetalle>().HasOne(vt => vt.Venta).WithMany(v => v.VentaDetalle)
+                .HasForeignKey(vt => vt.VentaId);
+
             modelBuilder.Entity<Categoria>().Property(c => c.Descripcion).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Categoria>().Ignore(c => c.Stock);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Categoria>());

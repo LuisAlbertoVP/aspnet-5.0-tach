@@ -20,7 +20,7 @@ namespace Tach.Models.Helpers {
 
         public string OperadorLogico { get; set; }
 
-        public async Task<Model<T>> BuildModel<T>(IQueryable<T> query, string fields) {
+        public async Task<Model> BuildModel<T>(IQueryable<T> query, string fields) {
             var builder = new StringBuilder();
             var filtros = new List<dynamic>();
             int cont = 0;
@@ -35,9 +35,9 @@ namespace Tach.Models.Helpers {
             }
             builder.Append(')');
             query = query.Where(builder.ToString(), filtros.ToArray()).OrderBy(this.Orden.ToString());
-            var model = new Model<T>();
+            var model = new Model();
             model.Total = await query.CountAsync();
-            model.Data = await query.Skip(this.Pagina * this.Cantidad).Take(this.Cantidad).Select<T>(fields).ToListAsync();
+            model.Data = await query.Skip(this.Pagina * this.Cantidad).Take(this.Cantidad).Select(fields).ToDynamicListAsync();
             return model;
         }
     }

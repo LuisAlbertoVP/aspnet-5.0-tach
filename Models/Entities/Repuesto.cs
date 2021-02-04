@@ -23,9 +23,9 @@ namespace Tach.Models.Entities {
 
         public string Descripcion { get; set; }
 
-        public ICollection<Compra> Compras { get; set; }
+        public ICollection<CompraDetalle> CompraDetalle { get; set; }
 
-        public ICollection<Venta> Ventas { get; set; }
+        public ICollection<VentaDetalle> VentaDetalle { get; set; }
 
     }
 }

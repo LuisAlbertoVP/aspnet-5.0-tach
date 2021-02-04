@@ -288,57 +288,59 @@ namespace Tach.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "RepuestoVenta",
+                name: "VentaDetalle",
                 columns: table => new
                 {
-                    RepuestosId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
-                    VentasId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false)
+                    RepuestoId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    VentaId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_RepuestoVenta", x => new { x.RepuestosId, x.VentasId });
+                    table.PrimaryKey("PK_VentaDetalle", x => new { x.RepuestoId, x.VentaId });
                     table.ForeignKey(
-                        name: "FK_RepuestoVenta_Repuestos_RepuestosId",
-                        column: x => x.RepuestosId,
+                        name: "FK_VentaDetalle_Repuestos_RepuestoId",
+                        column: x => x.RepuestoId,
                         principalTable: "Repuestos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RepuestoVenta_Ventas_VentasId",
-                        column: x => x.VentasId,
+                        name: "FK_VentaDetalle_Ventas_VentaId",
+                        column: x => x.VentaId,
                         principalTable: "Ventas",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompraRepuesto",
+                name: "CompraDetalle",
                 columns: table => new
                 {
-                    ComprasId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
-                    RepuestosId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false)
+                    CompraId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    RepuestoId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
+                    Cantidad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompraRepuesto", x => new { x.ComprasId, x.RepuestosId });
+                    table.PrimaryKey("PK_CompraDetalle", x => new { x.CompraId, x.RepuestoId });
                     table.ForeignKey(
-                        name: "FK_CompraRepuesto_Compras_ComprasId",
-                        column: x => x.ComprasId,
+                        name: "FK_CompraDetalle_Compras_CompraId",
+                        column: x => x.CompraId,
                         principalTable: "Compras",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CompraRepuesto_Repuestos_RepuestosId",
-                        column: x => x.RepuestosId,
+                        name: "FK_CompraDetalle_Repuestos_RepuestoId",
+                        column: x => x.RepuestoId,
                         principalTable: "Repuestos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompraRepuesto_RepuestosId",
-                table: "CompraRepuesto",
-                column: "RepuestosId");
+                name: "IX_CompraDetalle_RepuestoId",
+                table: "CompraDetalle",
+                column: "RepuestoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Compras_ProveedorId",
@@ -361,14 +363,14 @@ namespace Tach.Migrations
                 column: "MarcaId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RepuestoVenta_VentasId",
-                table: "RepuestoVenta",
-                column: "VentasId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_RolUsuario_UsuariosId",
                 table: "RolUsuario",
                 column: "UsuariosId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_VentaDetalle_VentaId",
+                table: "VentaDetalle",
+                column: "VentaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Ventas_ClienteId",
@@ -379,16 +381,16 @@ namespace Tach.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "CompraRepuesto");
+                name: "CompraDetalle");
 
             migrationBuilder.DropTable(
                 name: "ModuloRol");
 
             migrationBuilder.DropTable(
-                name: "RepuestoVenta");
+                name: "RolUsuario");
 
             migrationBuilder.DropTable(
-                name: "RolUsuario");
+                name: "VentaDetalle");
 
             migrationBuilder.DropTable(
                 name: "Compras");
@@ -397,16 +399,16 @@ namespace Tach.Migrations
                 name: "Modulos");
 
             migrationBuilder.DropTable(
-                name: "Repuestos");
-
-            migrationBuilder.DropTable(
-                name: "Ventas");
-
-            migrationBuilder.DropTable(
                 name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "Repuestos");
+
+            migrationBuilder.DropTable(
+                name: "Ventas");
 
             migrationBuilder.DropTable(
                 name: "Proveedores");
