@@ -16,9 +16,8 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public RolController(TachContext context) {
-            _context = context;
-        }
+        public RolController(TachContext context) => _context = context;
+
 
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
@@ -48,7 +47,7 @@ namespace Tach.Controllers
             if(newRol != null) {
                 newRol.Estado = rol.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = rol.Estado ? "Rol habilitado" : "Rol deshabilitado" }) : 
+                return result > 0 ? Ok(new Response { Result = rol.Estado ? "Rol restaurado" : "Rol reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El rol no existe");

@@ -17,8 +17,15 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public RepuestoController(TachContext context) {
-            _context = context;
+        public RepuestoController(TachContext context) => _context = context;
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetRepuesto(string id) {
+            var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
+                .Select("new(Id,Codigo,new(Categoria.Descripcion) as Categoria,new(Marca.Descripcion) as Marca,Modelo,Epoca,Precio)")
+                .ToDynamicArrayAsync();
+            return Ok(repuesto[0]);
         }
 
         [HttpGet("form")]
@@ -58,7 +65,7 @@ namespace Tach.Controllers
             if(newRepuesto != null) {
                 newRepuesto.Estado = repuesto.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = repuesto.Estado ?  "Repuesto habilitado" : "Repuesto deshabilitado" }) : 
+                return result > 0 ? Ok(new Response { Result = repuesto.Estado ?  "Repuesto restaurado" : "Repuesto reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El repuesto no existe");

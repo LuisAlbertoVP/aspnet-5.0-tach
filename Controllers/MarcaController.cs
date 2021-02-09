@@ -16,9 +16,8 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public MarcaController(TachContext context) {
-            _context = context;
-        }
+        public MarcaController(TachContext context) => _context = context;
+
 
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
@@ -48,7 +47,7 @@ namespace Tach.Controllers
             if(newMarca != null) {
                 newMarca.Estado = marca.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = marca.Estado ? "Marca habilitada" : "Marca deshabilitada" }) : 
+                return result > 0 ? Ok(new Response { Result = marca.Estado ? "Marca restaurada" : "Marca reciclada" }) : 
                     StatusCode(304);
             }
             return NotFound("La marca no existe");

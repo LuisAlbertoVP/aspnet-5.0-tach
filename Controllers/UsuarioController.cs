@@ -17,9 +17,8 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public UsuarioController(TachContext context) {
-            _context = context;
-        }
+        public UsuarioController(TachContext context) => _context = context;
+
 
         [HttpGet("form")]
         public async Task<IActionResult> GetForm() {
@@ -56,7 +55,7 @@ namespace Tach.Controllers
             if(newUsuario != null) {
                 newUsuario.Estado = usuario.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = usuario.Estado ? "Usuario habilitado" : "Usuario deshabilitado" }) : 
+                return result > 0 ? Ok(new Response { Result = usuario.Estado ? "Usuario restaurado" : "Usuario reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El usuario no existe");

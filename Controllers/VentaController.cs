@@ -1,5 +1,4 @@
 using System;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
@@ -17,25 +16,12 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public VentaController(TachContext context) {
-            _context = context;
-        }
+        public VentaController(TachContext context) => _context = context;
 
-        [HttpGet("repuestos/{id}")]
-        public async Task<IActionResult> GetRepuesto(string id) {
-            var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
-                .Select("new(Id,Codigo,new(Categoria.Descripcion) as Categoria,new(Marca.Descripcion) as Marca,Modelo,Epoca,Precio)")
-                .ToDynamicArrayAsync();
-            return Ok(repuesto[0]);
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> GetVentas() {
-            string repuesto = $"Repuesto.Codigo,Repuesto.Categoria,Repuesto.Marca,Repuesto.Modelo";
-            var ventas =  await _context.Ventas.Where("Estado == true")
-                .Select($"new(Id,Cantidad,Total,VentaDetalle.Select(new(Cantidad,new({repuesto}) as Repuesto)) as VentaDetalle)")
-                .ToDynamicListAsync();
-            return Ok(ventas);
+        [HttpPost("all")]
+        public async Task<IActionResult> GetAll(Busqueda busqueda) {
+            return Ok(await busqueda.BuildModel<Venta>(_context.Ventas.AsQueryable(), Field.Ventas, false));
         }
 
         [HttpPost]
@@ -61,7 +47,7 @@ namespace Tach.Controllers
             if(newVenta != null) {
                 newVenta.Estado = venta.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = venta.Estado ?  "Venta habilitada" : "Venta deshabilitada" }) : 
+                return result > 0 ? Ok(new Response { Result = venta.Estado ?  "Venta restaurada" : "Venta reclidada" }) : 
                     StatusCode(304);
             }
             return NotFound("La venta no existe");

@@ -16,16 +16,18 @@ namespace Tach.Models.Helpers {
 
         public int Cantidad { get; set; }
 
-        public string Estado { get; set; }
+        public bool Estado { get; set; }
 
         public string OperadorLogico { get; set; }
 
-        public async Task<Model> BuildModel<T>(IQueryable<T> query, string fields) {
+        public async Task<Model> BuildModel<T>(IQueryable<T> query, string fields, bool estadoTabla = true) {
             var builder = new StringBuilder();
             var filtros = new List<dynamic>();
             int cont = 0;
-            builder.Append(string.Format("Estado == {0}", this.Estado == "1" ? true : false));
-            builder.Append("&&").Append("EstadoTabla == true").Append("&&");
+            builder.Append(string.Format("Estado == {0}", this.Estado)).Append("&&");
+            if(estadoTabla) {
+                builder.Append("EstadoTabla == true").Append("&&");
+            }
             builder.Append('(');
             for(var i = 0; i < this.Filtros.Length; i++) {
                 if(i > 0) {

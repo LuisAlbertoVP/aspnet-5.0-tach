@@ -1,10 +1,7 @@
-using System;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
-using Tach.Models.Helpers;
 using Tach.Models.Policy;
-using Tach.Models.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,13 +9,13 @@ namespace Tach.Controllers
 {
     [ApiController]
     [Route("api/reportes")]
+    [HasPermission("Reportes")]
     public class ReporteController : ControllerBase
     {
         private readonly TachContext _context;
 
-        public ReporteController(TachContext context) {
-            _context = context;
-        }
+        public ReporteController(TachContext context) => _context = context;
+
 
         [HttpGet]
         public async Task<IActionResult> Get() {

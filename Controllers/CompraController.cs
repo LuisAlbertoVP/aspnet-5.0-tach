@@ -1,5 +1,4 @@
 using System;
-using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
@@ -17,25 +16,12 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public CompraController(TachContext context) {
-            _context = context;
-        }
+        public CompraController(TachContext context) => _context = context;
 
-        [HttpGet("repuestos/{id}")]
-        public async Task<IActionResult> GetRepuesto(string id) {
-            var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
-                .Select("new(Id,Codigo,new(Categoria.Descripcion) as Categoria,new(Marca.Descripcion) as Marca,Modelo,Epoca,Precio)")
-                .ToDynamicArrayAsync();
-            return Ok(repuesto[0]);
-        }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCompras() {
-            string repuesto = $"Repuesto.Codigo,Repuesto.Categoria,Repuesto.Marca,Repuesto.Modelo";
-            var compras =  await _context.Compras.Where("Estado == true")
-                .Select($"new(Id,Cantidad,Total,CompraDetalle.Select(new(Cantidad,new({repuesto}) as Repuesto)) as CompraDetalle)")
-                .ToDynamicListAsync();
-            return Ok(compras);
+        [HttpPost("all")]
+        public async Task<IActionResult> GetAll(Busqueda busqueda) {
+            return Ok(await busqueda.BuildModel<Compra>(_context.Compras.AsQueryable(), Field.Compras, false));
         }
 
         [HttpPost]
@@ -61,7 +47,7 @@ namespace Tach.Controllers
             if(newCompra != null) {
                 newCompra.Estado = compra.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = compra.Estado ?  "Compra habilitada" : "Compra deshabilitada" }) : 
+                return result > 0 ? Ok(new Response { Result = compra.Estado ?  "Compra restaurada" : "Compra reciclada" }) : 
                     StatusCode(304);
             }
             return NotFound("La compra no existe");

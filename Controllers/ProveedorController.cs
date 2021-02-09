@@ -16,9 +16,8 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public ProveedorController(TachContext context) {
-            _context = context;
-        }
+        public ProveedorController(TachContext context) => _context = context;
+
 
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
@@ -48,7 +47,7 @@ namespace Tach.Controllers
             if(newProveedor != null) {
                 newProveedor.Estado = proveedor.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = proveedor.Estado ? "Proveedor habilitado" : "Proveedor deshabilitado" }) : 
+                return result > 0 ? Ok(new Response { Result = proveedor.Estado ? "Proveedor restaurado" : "Proveedor reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El proveedor no existe");

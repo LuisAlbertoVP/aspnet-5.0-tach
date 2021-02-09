@@ -16,9 +16,8 @@ namespace Tach.Controllers
     {
         private readonly TachContext _context;
 
-        public CategoriaController(TachContext context) {
-            _context = context;
-        }
+        public CategoriaController(TachContext context) => _context = context;
+
 
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
@@ -48,7 +47,7 @@ namespace Tach.Controllers
             if(newCategoria != null) {
                 newCategoria.Estado = categoria.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = categoria.Estado ? "Categoría habilitada" : "Categoría deshabilitada" }) : 
+                return result > 0 ? Ok(new Response { Result = categoria.Estado ? "Categoría restaurada" : "Categoría reciclada" }) : 
                     StatusCode(304);
             }
             return NotFound("La categoría no existe");
