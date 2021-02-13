@@ -25,7 +25,9 @@ namespace Tach.Controllers
                 .Take(5).Select<Marca>("new(Id, Descripcion, Repuestos.Count as Stock)").ToListAsync();
             var ventas = await _context.Ventas.Where("Estado == true").OrderBy("FechaIngreso")
                 .Select("new(Cantidad,Total,FechaIngreso)").ToDynamicArrayAsync();
-            return Ok(new { marcas = marcas, categorias = categorias, ventas = ventas });
+            var compras = await _context.Compras.Where("Estado == true").OrderBy("FechaIngreso")
+                .Select("new(Cantidad,Total,FechaIngreso)").ToDynamicArrayAsync();
+            return Ok(new { marcas = marcas, categorias = categorias, ventas = ventas, compras = compras });
         }
     }
 }
