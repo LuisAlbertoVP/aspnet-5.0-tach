@@ -7,6 +7,7 @@ using Tach.Models.Policy;
 using Tach.Models.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
 
 namespace Tach.Controllers
 {
@@ -24,8 +25,8 @@ namespace Tach.Controllers
         public async Task<IActionResult> GetRepuesto(string id) {
             var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
                 .Select("new(Id,Codigo,new(Categoria.Descripcion) as Categoria,new(Marca.Descripcion) as Marca,Modelo,Epoca,Precio)")
-                .ToDynamicArrayAsync();
-            return Ok(repuesto[0]);
+                .FirstOrDefaultAsync();
+            return Ok(repuesto);
         }
 
         [HttpGet("form")]
@@ -39,7 +40,7 @@ namespace Tach.Controllers
 
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
-            return Ok(await busqueda.BuildModel<Repuesto>(_context.Repuestos.AsQueryable(), Field.Repuestos));
+            return Ok(await busqueda.BuildModel<Repuesto>(_context.Repuestos.AsQueryable(), QueryBuilder.Repuestos));
         }
 
         [HttpPost]

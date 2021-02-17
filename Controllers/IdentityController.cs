@@ -6,6 +6,7 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Tach.Models.Entities;
@@ -111,8 +112,8 @@ namespace Tach.Controllers
         public async Task<IActionResult> GetRolUsuario(string id) {
             var usuario = await _context.Usuarios.Where("Estado == true && EstadoTabla == true && Id == @0", id)
                 .Select("new(Roles.Where(Estado == true && EstadoTabla == true).Select(new(Modulos)) as Roles)")
-                .ToDynamicArrayAsync();
-            return Ok(usuario[0]);
+                .FirstOrDefaultAsync();
+            return Ok(usuario);
         }
     }
 }

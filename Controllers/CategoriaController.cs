@@ -21,7 +21,7 @@ namespace Tach.Controllers
 
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
-            return Ok(await busqueda.BuildModel<Categoria>(_context.Categorias.AsQueryable(), Field.Base));
+            return Ok(await busqueda.BuildModel<Categoria>(_context.Categorias.AsQueryable(), QueryBuilder.Base));
         }
 
         [HttpPost]

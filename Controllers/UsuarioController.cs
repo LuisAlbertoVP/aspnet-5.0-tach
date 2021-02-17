@@ -29,7 +29,7 @@ namespace Tach.Controllers
 
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
-            return Ok(await busqueda.BuildModel<Usuario>(_context.Usuarios.AsQueryable(), Field.Usuarios));
+            return Ok(await busqueda.BuildModel<Usuario>(_context.Usuarios.AsQueryable(), QueryBuilder.Usuarios));
         }
 
         [HttpPost]

@@ -5,7 +5,9 @@ namespace Tach.Models.Helpers {
 
         public ICollection<dynamic> Data { get; set; }
 
-        public int Total { get; set; }
+        public int Cantidad { get; set; }
+
+        public int Stock { get; set; }
         
     }
 }
