@@ -50,6 +50,7 @@ namespace Tach
 
             modelBuilder.Entity<Categoria>().Property(c => c.Descripcion).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Categoria>().Ignore(c => c.Stock);
+            modelBuilder.Entity<Categoria>().Ignore(c => c.Precio);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Categoria>());
 
             modelBuilder.Entity<Cliente>().Property(c => c.TipoCliente).IsRequired().HasMaxLength(25);
@@ -60,6 +61,7 @@ namespace Tach
 
             modelBuilder.Entity<Marca>().Property(m => m.Descripcion).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Marca>().Ignore(m => m.Stock);
+            modelBuilder.Entity<Marca>().Ignore(m => m.Precio);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Marca>());
             
             modelBuilder.Entity<Proveedor>().Property(p => p.Descripcion).IsRequired().HasMaxLength(50);

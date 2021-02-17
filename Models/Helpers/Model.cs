@@ -8,6 +8,8 @@ namespace Tach.Models.Helpers {
         public int Cantidad { get; set; }
 
         public int Stock { get; set; }
+
+        public double Precio { get; set; }
         
     }
 }

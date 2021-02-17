@@ -11,5 +11,7 @@ namespace Tach.Models.Entities {
 
         public int Stock { get; set; }
 
+        public double Precio { get; set; }
+
     }
 }

@@ -5,9 +5,10 @@ namespace Tach.Models.Helpers {
 
         public static Query Base { 
             get { 
-                query.CamposConsulta = "new(Id,Descripcion,Repuestos.Count as Stock,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion," 
-                    + "FechaModificacion)";
-                query.CampoSumar = "Repuestos.Sum(Stock)";
+                query.CamposConsulta = "new(Id,Descripcion,Repuestos.Sum(Stock) as Stock,Repuestos.Sum(Precio) as Precio,Estado,UsuarioIngreso," 
+                    + "FechaIngreso,UsuarioModificacion,FechaModificacion)";
+                query.SumaStock = "Repuestos.Sum(Stock)";
+                query.SumaPrecio = "Repuestos.Sum(Precio)";
                 return query;
             }
         }
@@ -17,7 +18,8 @@ namespace Tach.Models.Helpers {
                 query.CamposConsulta = "new(Id,Cantidad,Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,CompraDetalle.Select("
                     + "new(Cantidad,new(new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca," 
                     + "Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca) as Repuesto)) as CompraDetalle)";
-                query.CampoSumar = "Cantidad";
+                query.SumaStock = "Cantidad";
+                query.SumaPrecio = "Total";
                 return query;
             }
         }
@@ -26,7 +28,8 @@ namespace Tach.Models.Helpers {
             get { 
                 query.CamposConsulta = "new(Id,Descripcion,Convenio,Telefono,Direccion,TipoProveedor,Contacto,TelefonoContacto,"
                     +"CorreoContacto,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)";
-                query.CampoSumar = null;
+                query.SumaStock = null;
+                query.SumaPrecio = null;
                 return query; 
             }
         }
@@ -35,7 +38,8 @@ namespace Tach.Models.Helpers {
             get { 
                 query.CamposConsulta = "new(Id,Codigo,new(Categoria.Id,Categoria.Descripcion) as Categoria,new(Marca.Id,Marca.Descripcion) as Marca,"
                     +"Modelo,Epoca,SubMarca,Stock,Precio,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)";
-                query.CampoSumar = "Stock";
+                query.SumaStock = "Stock";
+                query.SumaPrecio = "Precio";
                 return query;
             }
         }
@@ -43,7 +47,8 @@ namespace Tach.Models.Helpers {
         public static Query Roles { 
             get { 
                 query.CamposConsulta = "new(Id,Descripcion,Modulos,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)";
-                query.CampoSumar = null; 
+                query.SumaStock = null;
+                query.SumaPrecio = null;
                 return query;
             }
         }
@@ -52,7 +57,8 @@ namespace Tach.Models.Helpers {
             get { 
                 query.CamposConsulta = "new(Id,NombreUsuario,Nombres,Cedula,Direccion,Telefono,Celular,FechaNacimiento,Correo,Roles.Select("
                     +"new(Id, Descripcion)) as Roles,FechaContratacion,Salario,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)"; 
-                query.CampoSumar = null;
+                query.SumaStock = null;
+                query.SumaPrecio = null;
                 return query;
             }
         }
@@ -62,7 +68,8 @@ namespace Tach.Models.Helpers {
                 query.CamposConsulta = "new(Id,Cantidad,Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,VentaDetalle.Select(new(Cantidad,new("
                     + "new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca," 
                     + "Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca) as Repuesto)) as VentaDetalle)";
-                query.CampoSumar = "Cantidad";
+                query.SumaStock = "Cantidad";
+                query.SumaPrecio = "Total";
                 return query;
             }
         }
