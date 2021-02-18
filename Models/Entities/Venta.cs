@@ -5,6 +5,8 @@ namespace Tach.Models.Entities {
 
         public Cliente Cliente { get; set; }
 
+        public string Direccion { get; set; }
+
         public ICollection<VentaDetalle> VentaDetalle { get; set; }
         
     }

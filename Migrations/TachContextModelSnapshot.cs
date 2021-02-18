@@ -163,7 +163,13 @@ namespace Tach.Migrations
                     b.Property<bool>("Estado")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("FechaIngreso")
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("FechaIngreso")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("ProveedorId")
@@ -173,7 +179,10 @@ namespace Tach.Migrations
                         .HasColumnType("double");
 
                     b.Property<string>("UsuarioIngreso")
-                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("UsuarioModificacion")
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
 
@@ -505,17 +514,29 @@ namespace Tach.Migrations
                     b.Property<string>("Descripcion")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
+                    b.Property<string>("Direccion")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
                     b.Property<bool>("Estado")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<DateTime>("FechaIngreso")
+                    b.Property<DateTime>("Fecha")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("FechaIngreso")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime(6)");
 
                     b.Property<double>("Total")
                         .HasColumnType("double");
 
                     b.Property<string>("UsuarioIngreso")
-                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("UsuarioModificacion")
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
 

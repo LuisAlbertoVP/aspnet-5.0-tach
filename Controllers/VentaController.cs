@@ -29,7 +29,7 @@ namespace Tach.Controllers
             if(new TransaccionValidator().Validate(venta).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL InsertVenta({0})", JSON.Parse<Venta>(venta));
+                    _context.Database.ExecuteSqlRaw("CALL AddVenta({0})", JSON.Parse<Venta>(venta));
                     transaction.Commit();
                     return Ok(new Response { Result = "Venta agregada correctamente" });
                 } catch (Exception) {

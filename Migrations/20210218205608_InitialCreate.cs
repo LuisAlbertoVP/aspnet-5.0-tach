@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tach.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -159,12 +159,16 @@ namespace Tach.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     ClienteId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
+                    Direccion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UsuarioModificacion = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
+                    FechaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Fecha = table.Column<DateTime>(type: "date", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<double>(type: "double", nullable: false),
-                    Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -221,12 +225,15 @@ namespace Tach.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     ProveedorId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
+                    Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
+                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    UsuarioModificacion = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
+                    FechaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
+                    Fecha = table.Column<DateTime>(type: "date", nullable: false),
                     Cantidad = table.Column<int>(type: "int", nullable: false),
                     Total = table.Column<double>(type: "double", nullable: false),
-                    Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: false),
-                    FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true)
                 },
                 constraints: table =>
                 {

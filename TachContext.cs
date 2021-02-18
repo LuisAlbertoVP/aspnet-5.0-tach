@@ -49,19 +49,16 @@ namespace Tach
                 .HasForeignKey(vt => vt.VentaId);
 
             modelBuilder.Entity<Categoria>().Property(c => c.Descripcion).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Categoria>().Ignore(c => c.Stock);
-            modelBuilder.Entity<Categoria>().Ignore(c => c.Precio);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Categoria>());
 
             modelBuilder.Entity<Cliente>().Property(c => c.TipoCliente).IsRequired().HasMaxLength(25);
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration<Cliente>());
 
-            modelBuilder.Entity<Compra>().Property(c => c.UsuarioIngreso).IsRequired().HasMaxLength(10);
-            modelBuilder.Entity<Compra>().Property(c => c.FechaIngreso).IsRequired();
+            modelBuilder.Entity<Compra>().Property(c => c.Fecha).IsRequired().HasColumnType("date");
+            modelBuilder.Entity<Compra>().Ignore(c => c.EstadoTabla);
+            modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Compra>());
 
             modelBuilder.Entity<Marca>().Property(m => m.Descripcion).IsRequired().HasMaxLength(50);
-            modelBuilder.Entity<Marca>().Ignore(m => m.Stock);
-            modelBuilder.Entity<Marca>().Ignore(m => m.Precio);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Marca>());
             
             modelBuilder.Entity<Proveedor>().Property(p => p.Descripcion).IsRequired().HasMaxLength(50);
@@ -88,9 +85,9 @@ namespace Tach
             modelBuilder.Entity<Usuario>().Property(u => u.FechaContratacion).IsRequired().HasColumnType("date");
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration<Usuario>());
 
-
-            modelBuilder.Entity<Venta>().Property(v => v.UsuarioIngreso).IsRequired().HasMaxLength(10);
-            modelBuilder.Entity<Venta>().Property(v => v.FechaIngreso).IsRequired();
+            modelBuilder.Entity<Venta>().Property(v => v.Fecha).IsRequired().HasColumnType("date");
+            modelBuilder.Entity<Venta>().Ignore(v => v.EstadoTabla);
+            modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Venta>());
         }
     }
 
