@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
@@ -6,6 +7,7 @@ using Tach.Models.Policy;
 using Tach.Models.Validators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.DynamicLinq;
 
 namespace Tach.Controllers
 {
@@ -19,6 +21,18 @@ namespace Tach.Controllers
         public VentaController(TachContext context) => _context = context;
 
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(string id) {
+            var query = "new(Id,Fecha,Cantidad,Total,Descripcion,Direccion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,"
+                    + "FechaModificacion,VentaDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria.Descripcion) as Categoria," 
+                    + "new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca,"
+                    + "Repuesto.Precio) as Repuesto)) as VentaDetalle)";
+            var venta = await _context.Ventas.Where("Estado == true").Where("Id == @0", id).Select(query).FirstOrDefaultAsync();
+            if(venta != null)
+                return Ok(venta);
+            return NotFound("No existe venta");
+        }
+
         [HttpPost("all")]
         public async Task<IActionResult> GetAll(Busqueda busqueda) {
             return Ok(await busqueda.BuildModel<Venta>(_context.Ventas.AsQueryable(), QueryBuilder.Ventas, false));
@@ -31,10 +45,10 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddVenta({0})", JSON.Parse<Venta>(venta));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Venta agregada correctamente" });
+                    return Ok(new Response { Result = "Venta actualizada correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Venta no agregada");
+                    return BadRequest("Venta no actualizada");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");

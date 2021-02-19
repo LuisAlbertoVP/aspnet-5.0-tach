@@ -15,9 +15,7 @@ namespace Tach.Models.Helpers {
 
         public static Query Compras {
             get {
-                query.CamposConsulta = "new(Id,Fecha,Cantidad,Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion,"
-                    + "CompraDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca," 
-                    + "Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca) as Repuesto)) as CompraDetalle)";
+                query.CamposConsulta = "new(Id,Fecha,Cantidad,Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)";
                 query.SumaStock = "Cantidad";
                 query.SumaPrecio = "Total";
                 return query;
@@ -65,9 +63,8 @@ namespace Tach.Models.Helpers {
 
         public static Query Ventas {
             get {
-                query.CamposConsulta = "new(Id,Fecha,Cantidad,Total,Descripcion,Direccion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,"
-                    + "FechaModificacion,VentaDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria.Descripcion) as Categoria," 
-                    + "new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca) as Repuesto)) as VentaDetalle)";
+                query.CamposConsulta = "new(Id,Fecha,Cantidad,Total,Descripcion,Direccion,new(Cliente.Nombres) as Cliente,Estado,UsuarioIngreso,"
+                    + "FechaIngreso,UsuarioModificacion,FechaModificacion)";
                 query.SumaStock = "Cantidad";
                 query.SumaPrecio = "Total";
                 return query;
