@@ -27,10 +27,11 @@ namespace Tach.Controllers
                     + "FechaModificacion,VentaDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria.Descripcion) as Categoria," 
                     + "new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca,"
                     + "Repuesto.Precio) as Repuesto)) as VentaDetalle)";
-            var venta = await _context.Ventas.Where("Estado == true").Where("Id == @0", id).Select(query).FirstOrDefaultAsync();
-            if(venta != null)
-                return Ok(venta);
-            return NotFound("No existe venta");
+            var venta = await _context.Ventas.Where("Estado == true").Where("Id == @0", id)
+                .Select(query).FirstOrDefaultAsync();
+            var clientes = await _context.Clientes.Where("Estado == true && EstadoTabla == true")
+                .Select("new(Id,Nombres)").ToDynamicArrayAsync();
+            return Ok(new { venta = venta, clientes = clientes });
         }
 
         [HttpPost("all")]

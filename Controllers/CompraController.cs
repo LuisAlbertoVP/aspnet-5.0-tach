@@ -26,10 +26,9 @@ namespace Tach.Controllers
             var query = "new(Id,Fecha,Cantidad,Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion,"
                     + "CompraDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) " 
                     + "as Marca,Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as CompraDetalle)";
-            var compra = await _context.Compras.Where("Estado == true").Where("Id == @0", id).Select(query).FirstOrDefaultAsync();
-            if(compra != null)
-                return Ok(compra);
-            return NotFound("No existe compra");
+            var compra = await _context.Compras.Where("Estado == true").Where("Id == @0", id)
+                .Select(query).FirstOrDefaultAsync();
+            return Ok(new { compra = compra });
         }
 
         [HttpPost("all")]
