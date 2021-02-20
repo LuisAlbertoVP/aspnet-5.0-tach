@@ -39,7 +39,7 @@ namespace Tach.Controllers
 
         [HttpPost]
         public IActionResult InsertOrUpdate(Compra compra) {
-            if(new TransaccionValidator().Validate(compra).IsValid) {
+            if(new CompraValidator().Validate(compra).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddCompra({0})", JSON.Parse<Compra>(compra));

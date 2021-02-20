@@ -22,6 +22,16 @@ namespace Tach.Models.Helpers {
             }
         }
 
+        public static Query Clientes { 
+            get { 
+                query.CamposConsulta = "new(Id,Nombres,Cedula,Direccion,Telefono,Celular,FechaNacimiento,Correo,TipoCliente,Estado,UsuarioIngreso,"
+                    + "FechaIngreso,UsuarioModificacion,FechaModificacion)"; 
+                query.SumaStock = null;
+                query.SumaPrecio = null;
+                return query;
+            }
+        }
+
         public static Query Proveedores { 
             get { 
                 query.CamposConsulta = "new(Id,Descripcion,Convenio,Telefono,Direccion,TipoProveedor,Contacto,TelefonoContacto,CorreoContacto,Estado,"
