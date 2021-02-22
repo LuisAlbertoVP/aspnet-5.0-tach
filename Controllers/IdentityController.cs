@@ -68,7 +68,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", JSON.Parse<Usuario>(usuario));
                     transaction.Commit();
-                    return Ok(new Response { Result = "La cuenta ha sido creada satisfactoriamente, solicite su activación" });
+                    return Ok(new Respuesta { Result = "La cuenta ha sido creada satisfactoriamente, solicite su activación" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("La cuenta no ha sido creada");
@@ -86,7 +86,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL UpdateAccount({0})", JSON.Parse<Usuario>(usuario));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Cuenta actualizada correctamente" });
+                    return Ok(new Respuesta { Result = "Cuenta actualizada correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Cuenta no actualizada");

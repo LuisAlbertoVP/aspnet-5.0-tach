@@ -31,7 +31,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddMarca({0})", JSON.Parse<Marca>(marca));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Marca actualizada correctamente" });
+                    return Ok(new Respuesta { Result = "Marca actualizada correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Marca no actualizada");
@@ -47,7 +47,7 @@ namespace Tach.Controllers
             if(newMarca != null) {
                 newMarca.Estado = marca.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = marca.Estado ? "Marca restaurada" : "Marca reciclada" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = marca.Estado ? "Marca restaurada" : "Marca reciclada" }) : 
                     StatusCode(304);
             }
             return NotFound("La marca no existe");
@@ -59,7 +59,7 @@ namespace Tach.Controllers
             if(newMarca != null) {
                 newMarca.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = "Marca eliminada correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Respuesta { Result = "Marca eliminada correctamente" }) : StatusCode(304);
             }
             return NotFound("La marca no existe");
         }

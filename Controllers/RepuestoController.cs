@@ -50,7 +50,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddRepuesto({0})", JSON.Parse<Repuesto>(repuesto));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Repuesto actualizado correctamente" });
+                    return Ok(new Respuesta { Result = "Repuesto actualizado correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Repuesto no actualizado");
@@ -66,7 +66,7 @@ namespace Tach.Controllers
             if(newRepuesto != null) {
                 newRepuesto.Estado = repuesto.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = repuesto.Estado ?  "Repuesto restaurado" : "Repuesto reclidado" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = repuesto.Estado ?  "Repuesto restaurado" : "Repuesto reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El repuesto no existe");
@@ -78,7 +78,7 @@ namespace Tach.Controllers
             if(newRepuesto != null) {
                 newRepuesto.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = "Repuesto eliminado correctamente"}) : StatusCode(304);
+                return result > 0 ? Ok(new Respuesta { Result = "Repuesto eliminado correctamente"}) : StatusCode(304);
             }
             return NotFound("El repuesto no existe");
         }

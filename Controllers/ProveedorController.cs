@@ -31,7 +31,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddProveedor({0})", JSON.Parse<Proveedor>(proveedor));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Proveedor actualizado correctamente" });
+                    return Ok(new Respuesta { Result = "Proveedor actualizado correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Proveedor no actualizado");
@@ -47,7 +47,7 @@ namespace Tach.Controllers
             if(newProveedor != null) {
                 newProveedor.Estado = proveedor.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = proveedor.Estado ? "Proveedor restaurado" : "Proveedor reclidado" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = proveedor.Estado ? "Proveedor restaurado" : "Proveedor reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El proveedor no existe");
@@ -59,7 +59,7 @@ namespace Tach.Controllers
             if(newProveedor != null) {
                 newProveedor.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = "Proveedor eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Respuesta { Result = "Proveedor eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El proveedor no existe");
         }

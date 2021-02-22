@@ -31,7 +31,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddCliente({0})", JSON.Parse<Cliente>(cliente));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Cliente actualizado correctamente" });
+                    return Ok(new Respuesta { Result = "Cliente actualizado correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Cliente no actualizado");
@@ -47,7 +47,7 @@ namespace Tach.Controllers
             if(newCliente != null) {
                 newCliente.Estado = cliente.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = cliente.Estado ? "Cliente restaurado" : "Cliente reclidado" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = cliente.Estado ? "Cliente restaurado" : "Cliente reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El cliente no existe");
@@ -59,7 +59,7 @@ namespace Tach.Controllers
             if(newCliente != null) {
                 newCliente.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = "Cliente eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Respuesta { Result = "Cliente eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El cliente no existe");
         }

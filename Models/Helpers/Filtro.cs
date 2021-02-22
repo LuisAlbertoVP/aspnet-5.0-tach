@@ -16,7 +16,7 @@ namespace Tach.Models.Helpers {
 
         public dynamic[] AddFiltro(StringBuilder builder, ref int cont) {
             if(this.Operador == "between") {
-                builder.Append($"({this.Id} >= @{cont} && {this.Id} <= @{cont + 1})");
+                builder.Append($"({this.Id}>=@{cont}&&{this.Id}<=@{cont + 1})");
                 cont = cont + 2;
                 return this.VerifyDate(this.Criterio1, this.Criterio2);
             } else {
@@ -39,7 +39,7 @@ namespace Tach.Models.Helpers {
                 builder.Append($"{this.Id}.Contains(@{cont})");
                 return "||";
             } else {
-                builder.Append($"{this.Id} {this.Operador} @{cont}");
+                builder.Append($"{this.Id}{this.Operador}@{cont}");
                 return "&&";
             }
         }

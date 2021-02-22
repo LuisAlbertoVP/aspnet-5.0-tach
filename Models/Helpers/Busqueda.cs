@@ -26,9 +26,9 @@ namespace Tach.Models.Helpers {
             var filtros = new List<dynamic>();
             int cont = 0;
             if(estadoTabla) {
-                builder.Append("EstadoTabla == true").Append("&&");
+                builder.Append("(EstadoTabla==true)").Append("&&");
             }
-            builder.Append(string.Format("Estado == {0}", this.Estado)).Append("&&")
+            builder.Append(string.Format("(Estado=={0})", this.Estado)).Append("&&")
                 .Append('(');
             for(var i = 0; i < this.Filtros.Length; i++) {
                 if(i > 0) {

@@ -46,7 +46,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddVenta({0})", JSON.Parse<Venta>(venta));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Venta actualizada correctamente" });
+                    return Ok(new Respuesta { Result = "Venta actualizada correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Venta no actualizada");
@@ -62,7 +62,7 @@ namespace Tach.Controllers
             if(newVenta != null) {
                 newVenta.Estado = venta.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = venta.Estado ?  "Venta restaurada" : "Venta reclidada" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = venta.Estado ?  "Venta restaurada" : "Venta reclidada" }) : 
                     StatusCode(304);
             }
             return NotFound("La venta no existe");

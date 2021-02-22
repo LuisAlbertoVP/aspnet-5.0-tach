@@ -39,7 +39,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", JSON.Parse<Usuario>(usuario));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Usuario actualizado correctamente" });
+                    return Ok(new Respuesta { Result = "Usuario actualizado correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Usuario no actualizado");
@@ -55,7 +55,7 @@ namespace Tach.Controllers
             if(newUsuario != null) {
                 newUsuario.Estado = usuario.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = usuario.Estado ? "Usuario restaurado" : "Usuario reclidado" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = usuario.Estado ? "Usuario restaurado" : "Usuario reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El usuario no existe");
@@ -67,7 +67,7 @@ namespace Tach.Controllers
             if(newUsuario != null) {
                 newUsuario.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = "Usuario eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Respuesta { Result = "Usuario eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El usuario no existe");
         }

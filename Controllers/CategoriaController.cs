@@ -31,7 +31,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddCategoria({0})", JSON.Parse<Categoria>(categoria));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Categoría actualizada correctamente" });
+                    return Ok(new Respuesta { Result = "Categoría actualizada correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Categoría no actualizada");
@@ -47,7 +47,7 @@ namespace Tach.Controllers
             if(newCategoria != null) {
                 newCategoria.Estado = categoria.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = categoria.Estado ? "Categoría restaurada" : "Categoría reciclada" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = categoria.Estado ? "Categoría restaurada" : "Categoría reciclada" }) : 
                     StatusCode(304);
             }
             return NotFound("La categoría no existe");
@@ -59,7 +59,7 @@ namespace Tach.Controllers
             if(newCategoria != null) {
                 newCategoria.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = "Categoría eliminada correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Respuesta { Result = "Categoría eliminada correctamente" }) : StatusCode(304);
             }
             return NotFound("La categoría no existe");
         }

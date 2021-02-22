@@ -31,7 +31,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddRol({0})", JSON.Parse<Rol>(rol));
                     transaction.Commit();
-                    return Ok(new Response { Result = "Rol actualizado correctamente" });
+                    return Ok(new Respuesta { Result = "Rol actualizado correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Rol no actualizado");
@@ -47,7 +47,7 @@ namespace Tach.Controllers
             if(newRol != null) {
                 newRol.Estado = rol.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = rol.Estado ? "Rol restaurado" : "Rol reclidado" }) : 
+                return result > 0 ? Ok(new Respuesta { Result = rol.Estado ? "Rol restaurado" : "Rol reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El rol no existe");
@@ -59,7 +59,7 @@ namespace Tach.Controllers
             if(newRol != null) {
                 newRol.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Response { Result = "Rol eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Respuesta { Result = "Rol eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El rol no existe");
         }
