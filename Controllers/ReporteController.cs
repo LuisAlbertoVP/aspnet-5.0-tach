@@ -17,15 +17,17 @@ namespace Tach.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Get() {
-            var categorias = await _context.Categorias.Where("Estado == true && EstadoTabla == true").OrderBy("Repuestos.Sum(Stock) desc")
-                .Select("new(Id, Descripcion, Repuestos.Sum(Stock) as Stock)").ToDynamicArrayAsync();
-            var marcas = await _context.Marcas.Where("Estado == true && EstadoTabla == true").OrderBy("Repuestos.Sum(Stock) desc")
-                .Select("new(Id, Descripcion, Repuestos.Sum(Stock) as Stock)").ToDynamicArrayAsync();
-            var ventas = await _context.Ventas.Where("Estado == true").OrderBy("Fecha")
-                .Select("new(Cantidad,Total,Fecha)").ToDynamicArrayAsync();
-            var compras = await _context.Compras.Where("Estado == true").OrderBy("Fecha")
-                .Select("new(Cantidad,Total,Fecha)").ToDynamicArrayAsync();
-            return Ok(new { marcas = marcas, categorias = categorias, ventas = ventas, compras = compras });
+            var query = "new(Id,Descripcion,Repuestos.Sum(Stock) as Stock,Repuestos.Sum(VentaDetalle.Sum(Cantidad)) as CantidadVentas,"
+                + "Repuestos.Sum(CompraDetalle.Sum(Cantidad)) as CantidadCompras)";
+            var categorias = await _context.Categorias.Where("Estado == true && EstadoTabla == true").Select(query)
+                .ToDynamicArrayAsync();
+            var marcas = await _context.Marcas.Where("Estado == true && EstadoTabla == true").Select(query)
+                .ToDynamicArrayAsync();
+            var ventas = await _context.Ventas.Where("Estado == true").Select("new(Cantidad,Total,Fecha)")
+                .ToDynamicArrayAsync();
+            var compras = await _context.Compras.Where("Estado == true").Select("new(Cantidad,Total,Fecha)")
+                .ToDynamicArrayAsync();
+            return Ok(new { categorias = categorias, marcas = marcas, ventas = ventas, compras = compras });
         }
     }
 }
