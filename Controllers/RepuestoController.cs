@@ -21,6 +21,15 @@ namespace Tach.Controllers
         public RepuestoController(TachContext context) => _context = context;
 
 
+        [HttpGet("{id}/reporte")]
+        public async Task<IActionResult> GetReporte(string id) {
+            var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Id == @0", id)
+                .Select("new(CompraDetalle.Select(new(Cantidad,new(Compra.Fecha) as Compra)) as CompraDetalle,VentaDetalle.Select("
+                    + "new(Cantidad,new(Venta.Fecha,Venta.Direccion) as Venta)) as VentaDetalle)")
+                .FirstOrDefaultAsync();
+            return Ok(repuesto);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRepuesto(string id) {
             var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
