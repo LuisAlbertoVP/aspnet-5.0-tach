@@ -6,6 +6,8 @@ namespace Tach.Models.Helpers {
         public string SumaStock { get; set; }
 
         public string SumaPrecio { get; set; }
+
+        public string SumaTotal { get; set; }
         
     }
 }

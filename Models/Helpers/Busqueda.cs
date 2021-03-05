@@ -39,9 +39,14 @@ namespace Tach.Models.Helpers {
             builder.Append(')');
             queryable = queryable.Where(builder.ToString(), filtros.ToArray());
             var model = new Model();
-            if(!string.IsNullOrEmpty(query.SumaStock) && !string.IsNullOrEmpty(query.SumaPrecio)) {
+            if(!string.IsNullOrEmpty(query.SumaStock)) {
                 model.Stock = await queryable.SumAsync(query.SumaStock);
+            }
+            if(!string.IsNullOrEmpty(query.SumaPrecio)) {
                 model.Precio = await queryable.SumAsync(query.SumaPrecio);
+            }
+            if(!string.IsNullOrEmpty(query.SumaTotal)) {
+                model.Total = await queryable.SumAsync(query.SumaTotal);
             }
             model.Cantidad = await queryable.CountAsync();
             model.Data = await queryable
