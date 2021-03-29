@@ -29,7 +29,7 @@ namespace Tach.Controllers
                     + "Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as VentaDetalle)";
             var venta = await _context.Ventas.Where("Estado == true").Where("Id == @0", id)
                 .Select(query).FirstOrDefaultAsync();
-            var clientes = await _context.Clientes.Where("Estado == true && EstadoTabla == true")
+            var clientes = await _context.Clientes.Where("Estado == true && EstadoTabla == true").OrderBy("Nombres")
                 .Select("new(Id,Nombres)").ToDynamicArrayAsync();
             return Ok(new { venta = venta, clientes = clientes });
         }
