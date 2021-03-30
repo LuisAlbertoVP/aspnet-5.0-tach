@@ -7,10 +7,6 @@ namespace Tach.Models.Entities {
 
         public DateTime Fecha { get; set; }
 
-        public int Cantidad { get; set; }
-
-        public double Total { get; set; }
-
         public string Descripcion { get; set; }
         
     }

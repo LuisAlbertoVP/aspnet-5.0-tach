@@ -39,7 +39,7 @@ namespace Tach.Models.Helpers {
                 builder.Append($"{this.Id}.Contains(@{cont})");
                 return "||";
             } else {
-                builder.Append($"{this.Id}{this.Operador}@{cont}");
+                builder.Append($"!{this.Id}.Contains(@{cont})");
                 return "&&";
             }
         }

@@ -9,8 +9,8 @@ using Tach;
 namespace Tach.Migrations
 {
     [DbContext(typeof(TachContext))]
-    [Migration("20210218205608_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210330152809_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -156,9 +156,6 @@ namespace Tach.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
                     b.Property<string>("Descripcion")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
@@ -176,9 +173,6 @@ namespace Tach.Migrations
 
                     b.Property<string>("ProveedorId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
-
-                    b.Property<double>("Total")
-                        .HasColumnType("double");
 
                     b.Property<string>("UsuarioIngreso")
                         .HasMaxLength(10)
@@ -507,9 +501,6 @@ namespace Tach.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.Property<int>("Cantidad")
-                        .HasColumnType("int");
-
                     b.Property<string>("ClienteId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
@@ -530,9 +521,6 @@ namespace Tach.Migrations
 
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime(6)");
-
-                    b.Property<double>("Total")
-                        .HasColumnType("double");
 
                     b.Property<string>("UsuarioIngreso")
                         .HasMaxLength(10)

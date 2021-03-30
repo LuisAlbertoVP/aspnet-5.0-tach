@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
@@ -17,6 +18,16 @@ namespace Tach.Controllers
         private readonly TachContext _context;
 
         public ClienteController(TachContext context) => _context = context;
+
+        [HttpGet("{id}/ventas")]
+        public async Task<IActionResult> GetVentas(string id) {
+            var ventas = await _context.Ventas.Where("Estado == true").Where("Cliente.Id == @0", id).OrderBy("Fecha")
+                .Select("new(Fecha,VentaDetalle.Select(new(Cantidad,new(Repuesto.Codigo,Repuesto.Modelo,Repuesto.Precio,"
+                    + "new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca) as "
+                    + "Repuesto)) as VentaDetalle)")
+                .ToDynamicArrayAsync();
+            return Ok(ventas);
+        }
 
 
         [HttpPost("all")]

@@ -23,9 +23,11 @@ namespace Tach.Controllers
                 .ToDynamicArrayAsync();
             var marcas = await _context.Marcas.Where("Estado == true && EstadoTabla == true").Select(query)
                 .ToDynamicArrayAsync();
-            var ventas = await _context.Ventas.Where("Estado == true").Select("new(Cantidad,Total,Fecha)")
+            var ventas = await _context.Ventas.Where("Estado == true")
+                .Select("new(VentaDetalle.Sum(Cantidad) as Cantidad,VentaDetalle.Sum(Cantidad * Repuesto.Precio) as Total,Fecha)")
                 .ToDynamicArrayAsync();
-            var compras = await _context.Compras.Where("Estado == true").Select("new(Cantidad,Total,Fecha)")
+            var compras = await _context.Compras.Where("Estado == true")
+                .Select("new(CompraDetalle.Sum(Cantidad) as Cantidad,CompraDetalle.Sum(Cantidad * Repuesto.Precio) as Total,Fecha)")
                 .ToDynamicArrayAsync();
             return Ok(new { categorias = categorias, marcas = marcas, ventas = ventas, compras = compras });
         }

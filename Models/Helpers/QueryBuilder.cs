@@ -15,10 +15,10 @@ namespace Tach.Models.Helpers {
         public static Query Compras {
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Fecha,Cantidad,Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,"
-                        + "FechaModificacion)",
-                    SumaStock = "Cantidad",
-                    SumaTotal = "Total",
+                    CamposConsulta = "new(Id,Fecha,CompraDetalle.Sum(Cantidad) as Cantidad,CompraDetalle.Sum(Cantidad * Repuesto.Precio) "
+                        + "as Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)",
+                    SumaStock = "CompraDetalle.Sum(Cantidad)",
+                    SumaTotal = "CompraDetalle.Sum(Cantidad * Repuesto.Precio)",
                 };
             }
         }
@@ -27,7 +27,8 @@ namespace Tach.Models.Helpers {
             get {
                 return new Query {
                     CamposConsulta = "new(Id,Nombres,Cedula,Direccion,Telefono,Celular,FechaNacimiento,Correo,TipoCliente,Estado,"
-                        + "UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)",
+                        + "Ventas.Sum(VentaDetalle.Sum(Cantidad)) as TotalVentas,UsuarioIngreso,FechaIngreso,"
+                        + "UsuarioModificacion,FechaModificacion)",
                 };
             }
         }
@@ -75,10 +76,11 @@ namespace Tach.Models.Helpers {
         public static Query Ventas {
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Fecha,Cantidad,Total,Descripcion,Direccion,new(Cliente.Nombres) as Cliente,Estado,"
-                        + "UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)",
-                    SumaStock = "Cantidad",
-                    SumaTotal = "Total"
+                    CamposConsulta = "new(Id,Fecha,VentaDetalle.Sum(Cantidad) as Cantidad,VentaDetalle.Sum(Cantidad * Repuesto.Precio) "
+                        + "as Total,Descripcion,Direccion,new(Cliente.Nombres) as Cliente,Estado,UsuarioIngreso,FechaIngreso,"
+                        + "UsuarioModificacion,FechaModificacion)",
+                    SumaStock = "VentaDetalle.Sum(Cantidad)",
+                    SumaTotal = "VentaDetalle.Sum(Cantidad * Repuesto.Precio)"
                 };
             }
         }

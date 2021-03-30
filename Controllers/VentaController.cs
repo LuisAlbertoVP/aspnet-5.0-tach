@@ -23,7 +23,7 @@ namespace Tach.Controllers
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id) {
-            var query = "new(Id,Fecha,Cantidad,Total,Descripcion,Direccion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,"
+            var query = "new(Id,Fecha,Descripcion,Direccion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,"
                     + "FechaModificacion,new(Cliente.Id) as Cliente,VentaDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria." 
                     + "Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,"
                     + "Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as VentaDetalle)";

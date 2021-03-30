@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tach.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -166,8 +166,6 @@ namespace Tach.Migrations
                     UsuarioModificacion = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
                     FechaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Fecha = table.Column<DateTime>(type: "date", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
-                    Total = table.Column<double>(type: "double", nullable: false),
                     Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true)
                 },
                 constraints: table =>
@@ -231,8 +229,6 @@ namespace Tach.Migrations
                     UsuarioModificacion = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
                     FechaModificacion = table.Column<DateTime>(type: "datetime(6)", nullable: true),
                     Fecha = table.Column<DateTime>(type: "date", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false),
-                    Total = table.Column<double>(type: "double", nullable: false),
                     Descripcion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true)
                 },
                 constraints: table =>

@@ -6,8 +6,6 @@ namespace Tach.Models.Validators {
         public TransaccionValidator() {
             RuleFor(transaccion => transaccion.Id).NotNull();
             RuleFor(transaccion => transaccion.Fecha).NotNull();
-            RuleFor(transaccion => transaccion.Cantidad).NotNull();
-            RuleFor(transaccion => transaccion.Total).NotNull();
         }
     }
 }
