@@ -22,7 +22,7 @@ namespace Tach.Controllers
         [HttpGet("{id}/ventas")]
         public async Task<IActionResult> GetVentas(string id) {
             var ventas = await _context.Ventas.Where("Estado == true").Where("Cliente.Id == @0", id).OrderBy("Fecha")
-                .Select("new(Fecha,VentaDetalle.Select(new(Cantidad,new(Repuesto.Codigo,Repuesto.Modelo,Repuesto.Precio,"
+                .Select("new(Fecha,Direccion,VentaDetalle.Select(new(Cantidad,new(Repuesto.Codigo,Repuesto.Modelo,Repuesto.Precio,"
                     + "new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca) as "
                     + "Repuesto)) as VentaDetalle)")
                 .ToDynamicArrayAsync();
