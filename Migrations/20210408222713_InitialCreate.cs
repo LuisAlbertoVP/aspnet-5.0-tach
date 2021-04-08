@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Tach.Migrations
 {
-    public partial class Initial : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -88,13 +88,10 @@ namespace Tach.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     Descripcion = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false),
-                    Convenio = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Telefono = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: true),
                     Direccion = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
-                    TipoProveedor = table.Column<string>(type: "varchar(100) CHARACTER SET utf8mb4", maxLength: 100, nullable: true),
-                    Contacto = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: true),
-                    TelefonoContacto = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: true),
-                    CorreoContacto = table.Column<string>(type: "varchar(320) CHARACTER SET utf8mb4", maxLength: 320, nullable: true),
+                    Correo = table.Column<string>(type: "varchar(320) CHARACTER SET utf8mb4", maxLength: 320, nullable: true),
+                    WebSite = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     EstadoTabla = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),

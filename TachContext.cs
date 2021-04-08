@@ -63,10 +63,7 @@ namespace Tach
             
             modelBuilder.Entity<Proveedor>().Property(p => p.Descripcion).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Proveedor>().Property(p => p.Telefono).HasMaxLength(25);
-            modelBuilder.Entity<Proveedor>().Property(p => p.TipoProveedor).HasMaxLength(100);
-            modelBuilder.Entity<Proveedor>().Property(p => p.Contacto).HasMaxLength(50);
-            modelBuilder.Entity<Proveedor>().Property(p => p.TelefonoContacto).HasMaxLength(25);
-            modelBuilder.Entity<Proveedor>().Property(p => p.CorreoContacto).HasMaxLength(320);
+            modelBuilder.Entity<Proveedor>().Property(p => p.Correo).HasMaxLength(320);
             modelBuilder.Entity<Proveedor>().Property(p => p.UsuarioIngreso).HasMaxLength(10);
             modelBuilder.Entity<Proveedor>().Property(p => p.UsuarioModificacion).HasMaxLength(10);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Proveedor>());

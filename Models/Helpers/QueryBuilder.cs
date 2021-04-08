@@ -36,8 +36,8 @@ namespace Tach.Models.Helpers {
         public static Query Proveedores { 
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Descripcion,Convenio,Telefono,Direccion,TipoProveedor,Contacto,TelefonoContacto,"
-                        + "CorreoContacto,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)"
+                    CamposConsulta = "new(Id,Descripcion,Telefono,Direccion,Correo,WebSite,Estado,UsuarioIngreso,FechaIngreso,"
+                        + "UsuarioModificacion,FechaModificacion)"
                 }; 
             }
         }

@@ -9,8 +9,8 @@ using Tach;
 namespace Tach.Migrations
 {
     [DbContext(typeof(TachContext))]
-    [Migration("20210330152809_Initial")]
-    partial class Initial
+    [Migration("20210408222713_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -261,14 +261,7 @@ namespace Tach.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
-                    b.Property<string>("Contacto")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
-
-                    b.Property<bool>("Convenio")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("CorreoContacto")
+                    b.Property<string>("Correo")
                         .HasMaxLength(320)
                         .HasColumnType("varchar(320) CHARACTER SET utf8mb4");
 
@@ -296,14 +289,6 @@ namespace Tach.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25) CHARACTER SET utf8mb4");
 
-                    b.Property<string>("TelefonoContacto")
-                        .HasMaxLength(25)
-                        .HasColumnType("varchar(25) CHARACTER SET utf8mb4");
-
-                    b.Property<string>("TipoProveedor")
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4");
-
                     b.Property<string>("UsuarioIngreso")
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
@@ -311,6 +296,9 @@ namespace Tach.Migrations
                     b.Property<string>("UsuarioModificacion")
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("WebSite")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 
@@ -631,7 +619,7 @@ namespace Tach.Migrations
             modelBuilder.Entity("Tach.Models.Entities.Venta", b =>
                 {
                     b.HasOne("Tach.Models.Entities.Cliente", "Cliente")
-                        .WithMany()
+                        .WithMany("Ventas")
                         .HasForeignKey("ClienteId");
 
                     b.Navigation("Cliente");
@@ -659,6 +647,11 @@ namespace Tach.Migrations
             modelBuilder.Entity("Tach.Models.Entities.Categoria", b =>
                 {
                     b.Navigation("Repuestos");
+                });
+
+            modelBuilder.Entity("Tach.Models.Entities.Cliente", b =>
+                {
+                    b.Navigation("Ventas");
                 });
 
             modelBuilder.Entity("Tach.Models.Entities.Compra", b =>
