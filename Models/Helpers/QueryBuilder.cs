@@ -12,11 +12,23 @@ namespace Tach.Models.Helpers {
             }
         }
 
+        public static Query Compra {
+            get {
+                return new Query {
+                    CamposConsulta = "new(Id,Fecha,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion,"
+                        + "new(Proveedor.Id) as Proveedor,Numero,Vendedor,SoldTo,ShipTo,Ruta,CompraDetalle.Select(new(Cantidad,new(new(" 
+                        + "Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Id,Repuesto.Codigo,"
+                        + "Repuesto.Modelo,Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as CompraDetalle)"
+                };
+            }
+        }
+
         public static Query Compras {
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Fecha,CompraDetalle.Sum(Cantidad) as Cantidad,CompraDetalle.Sum(Cantidad * Repuesto.Precio) "
-                        + "as Total,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)",
+                    CamposConsulta = "new(Id,Fecha,Numero,Vendedor,SoldTo,ShipTo,Ruta,CompraDetalle.Sum(Cantidad) as Cantidad,CompraDetalle.Sum("
+                        + "Cantidad * Repuesto.Precio) as Total,Descripcion,new(Proveedor.Descripcion) as Proveedor,Estado,UsuarioIngreso,"
+                        + "FechaIngreso,UsuarioModificacion,FechaModificacion)",
                     SumaStock = "CompraDetalle.Sum(Cantidad)",
                     SumaTotal = "CompraDetalle.Sum(Cantidad * Repuesto.Precio)",
                 };
@@ -69,6 +81,17 @@ namespace Tach.Models.Helpers {
                     CamposConsulta = "new(Id,NombreUsuario,Nombres,Cedula,Direccion,Telefono,Celular,FechaNacimiento,Correo,Roles.Select("
                         + "new(Id, Descripcion)) as Roles,FechaContratacion,Salario,Estado,UsuarioIngreso,FechaIngreso,"
                         + "UsuarioModificacion,FechaModificacion)"
+                };
+            }
+        }
+
+        public static Query Venta {
+            get {
+                return new Query {
+                    CamposConsulta = "new(Id,Fecha,Descripcion,Direccion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,"
+                    + "FechaModificacion,new(Cliente.Id) as Cliente,VentaDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria." 
+                    + "Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,"
+                    + "Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as VentaDetalle)"
                 };
             }
         }

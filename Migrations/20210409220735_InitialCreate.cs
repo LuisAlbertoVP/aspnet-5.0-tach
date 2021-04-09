@@ -220,6 +220,11 @@ namespace Tach.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     ProveedorId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
+                    Numero = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
+                    Vendedor = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    SoldTo = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    ShipTo = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
+                    Ruta = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     Estado = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     UsuarioIngreso = table.Column<string>(type: "varchar(10) CHARACTER SET utf8mb4", maxLength: 10, nullable: true),
                     FechaIngreso = table.Column<DateTime>(type: "datetime(6)", nullable: true),

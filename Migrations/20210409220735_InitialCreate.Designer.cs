@@ -9,7 +9,7 @@ using Tach;
 namespace Tach.Migrations
 {
     [DbContext(typeof(TachContext))]
-    [Migration("20210408222713_InitialCreate")]
+    [Migration("20210409220735_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -171,8 +171,22 @@ namespace Tach.Migrations
                     b.Property<DateTime?>("FechaModificacion")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<string>("Numero")
+                        .IsRequired()
+                        .HasMaxLength(25)
+                        .HasColumnType("varchar(25) CHARACTER SET utf8mb4");
+
                     b.Property<string>("ProveedorId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Ruta")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("ShipTo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("SoldTo")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("UsuarioIngreso")
                         .HasMaxLength(10)
@@ -181,6 +195,9 @@ namespace Tach.Migrations
                     b.Property<string>("UsuarioModificacion")
                         .HasMaxLength(10)
                         .HasColumnType("varchar(10) CHARACTER SET utf8mb4");
+
+                    b.Property<string>("Vendedor")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
 

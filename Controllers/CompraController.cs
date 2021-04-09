@@ -23,12 +23,11 @@ namespace Tach.Controllers
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id) {
-            var query = "new(Id,Fecha,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion,"
-                    + "CompraDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) " 
-                    + "as Marca,Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as CompraDetalle)";
             var compra = await _context.Compras.Where("Estado == true").Where("Id == @0", id)
-                .Select(query).FirstOrDefaultAsync();
-            return Ok(new { compra = compra });
+                .Select(QueryBuilder.Compra.CamposConsulta).FirstOrDefaultAsync();
+            var proveedores = await _context.Proveedores.Where("Estado == true && EstadoTabla == true").OrderBy("Descripcion")
+                .Select("new(Id,Descripcion)").ToDynamicArrayAsync();
+            return Ok(new { compra = compra, proveedores = proveedores });
         }
 
         [HttpPost("all")]
