@@ -1,10 +1,12 @@
 using System;
+using System.IO;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
 using Tach.Models.Policy;
 using Tach.Models.Validators;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.DynamicLinq;
@@ -20,6 +22,46 @@ namespace Tach.Controllers
 
         public CompraController(TachContext context) => _context = context;
 
+
+        [HttpGet("{id}/download")]
+        public async Task<IActionResult> DownloadFile(string id) {
+            try {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", id);
+                var filePath = Directory.GetFiles(path)[0];
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(filePath, FileMode.Open)) {
+                    await stream.CopyToAsync(memory);
+                }
+                memory.Position = 0;
+                var mimeType = MimeTypes.GetMimeType()[Path.GetExtension(filePath)];
+                return File(memory, mimeType, Path.GetFileName(filePath));
+            }
+            catch(Exception) {
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPost("{id}/upload")]
+        public async Task<IActionResult> UploadFile(string id, IFormFile file) {
+            try {
+                if (file.Length > 0) {
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", id);
+                    if(Directory.Exists(path)) {
+                        Directory.Delete(path, true);
+                    }
+                    Directory.CreateDirectory(path);
+                    var fullPath = Path.Combine(path, file.FileName);
+                    using (var stream = new FileStream(fullPath, FileMode.Create)) {
+                        await file.CopyToAsync(stream);
+                    }
+                    return Ok(new Respuesta { Result = "Archivo subido correctamente" });
+                } else {
+                    return BadRequest("El archivo no tiene contenido");
+                }
+            } catch(Exception) {
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(string id) {

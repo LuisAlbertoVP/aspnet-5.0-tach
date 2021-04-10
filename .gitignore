@@ -3,5 +3,6 @@ bin
 obj
 Properties
 Release
+Resources
 appsettings.json
 appsettings.Development.json
