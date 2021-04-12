@@ -23,25 +23,46 @@ namespace Tach.Controllers
         public CompraController(TachContext context) => _context = context;
 
 
-        [HttpGet("{id}/download")]
-        public async Task<IActionResult> DownloadFile(string id) {
+        [HttpPost("{id}/delete_file")]
+        public async Task<IActionResult> DeleteFile(string id) {
             try {
                 string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", id);
-                var filePath = Directory.GetFiles(path)[0];
-                var memory = new MemoryStream();
-                using (var stream = new FileStream(filePath, FileMode.Open)) {
-                    await stream.CopyToAsync(memory);
+                if(Directory.Exists(path)) {
+                    Directory.Delete(path, true);
+                    var compra = await _context.Compras.FindAsync(id);
+                    compra.Ruta = null;
+                    await _context.SaveChangesAsync(); 
+                    return Ok(new Respuesta { Result = "Archivo eliminado correctamente" });
                 }
-                memory.Position = 0;
-                var mimeType = MimeTypes.GetMimeType()[Path.GetExtension(filePath)];
-                return File(memory, mimeType, Path.GetFileName(filePath));
+                return NotFound("El archivo no existe");
             }
             catch(Exception) {
                 return StatusCode(500, "Error interno del servidor");
             }
         }
 
-        [HttpPost("{id}/upload")]
+        [HttpGet("{id}/download_file")]
+        public async Task<IActionResult> DownloadFile(string id) {
+            try {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "Resources", id);
+                if(Directory.Exists(path)) {
+                    var filePath = Directory.GetFiles(path)[0];
+                    var memory = new MemoryStream();
+                    using (var stream = new FileStream(filePath, FileMode.Open)) {
+                        await stream.CopyToAsync(memory);
+                    }
+                    memory.Position = 0;
+                    var mimeType = MimeTypes.GetMimeType()[Path.GetExtension(filePath).ToLower()];
+                    return File(memory, mimeType, Path.GetFileName(filePath));
+                }
+                return NotFound();
+            }
+            catch(Exception) {
+                return StatusCode(500, "Error interno del servidor");
+            }
+        }
+
+        [HttpPost("{id}/upload_file")]
         public async Task<IActionResult> UploadFile(string id, IFormFile file) {
             try {
                 if (file.Length > 0) {
@@ -54,7 +75,7 @@ namespace Tach.Controllers
                     using (var stream = new FileStream(fullPath, FileMode.Create)) {
                         await file.CopyToAsync(stream);
                     }
-                    return Ok(new Respuesta { Result = "Archivo subido correctamente" });
+                    return Ok();
                 } else {
                     return BadRequest("El archivo no tiene contenido");
                 }
@@ -84,7 +105,7 @@ namespace Tach.Controllers
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddCompra({0})", JSON.Parse<Compra>(compra));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Compra actualizada correctamente" });
+                    return Ok();
                 } catch (Exception) {
                     transaction.Rollback();
                     return BadRequest("Compra no actualizada");
