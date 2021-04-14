@@ -55,6 +55,7 @@ namespace Tach
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration<Cliente>());
 
             modelBuilder.Entity<Compra>().Property(c => c.Fecha).IsRequired().HasColumnType("date");
+            modelBuilder.Entity<Compra>().Property(c => c.TipoDocumento).IsRequired().HasMaxLength(50);
             modelBuilder.Entity<Compra>().Property(c => c.Numero).IsRequired().HasMaxLength(25);
             modelBuilder.Entity<Compra>().Ignore(c => c.EstadoTabla);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Compra>());

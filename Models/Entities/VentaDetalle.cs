@@ -3,6 +3,10 @@ namespace Tach.Models.Entities {
 
         public int Cantidad { get; set; }
 
+        public double Precio { get; set; }
+
+        public string Notas { get; set; }
+
         public string RepuestoId { get; set; }
 
         public Repuesto Repuesto { get; set; }

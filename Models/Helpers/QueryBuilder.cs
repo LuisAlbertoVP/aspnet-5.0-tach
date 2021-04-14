@@ -15,10 +15,10 @@ namespace Tach.Models.Helpers {
         public static Query Compra {
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Fecha,Descripcion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion,"
-                        + "new(Proveedor.Id) as Proveedor,Numero,Vendedor,SoldTo,ShipTo,Ruta,CompraDetalle.Select(new(Cantidad,new(new(" 
-                        + "Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Id,Repuesto.Codigo,"
-                        + "Repuesto.Modelo,Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as CompraDetalle)"
+                    CamposConsulta = "new(Id,Fecha,TipoDocumento,Numero,Vendedor,SoldTo,ShipTo,Ruta,Descripcion,Estado,UsuarioIngreso,FechaIngreso,"
+                        + "UsuarioModificacion,FechaModificacion,new(Orden.Id) as Orden,new(Proveedor.Id) as Proveedor,CompraDetalle.Select(new(" 
+                        + "Cantidad,Precio,Notas,new(new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,"
+                        + "Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca) as Repuesto)) as CompraDetalle)"
                 };
             }
         }
@@ -26,11 +26,11 @@ namespace Tach.Models.Helpers {
         public static Query Compras {
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Fecha,Numero,Vendedor,SoldTo,ShipTo,Ruta,CompraDetalle.Sum(Cantidad) as Cantidad,CompraDetalle.Sum("
-                        + "Cantidad * Repuesto.Precio) as Total,Descripcion,new(Proveedor.Descripcion) as Proveedor,Estado,UsuarioIngreso,"
-                        + "FechaIngreso,UsuarioModificacion,FechaModificacion)",
+                    CamposConsulta = "new(Id,Fecha,TipoDocumento,Numero,Vendedor,SoldTo,ShipTo,Ruta,CompraDetalle.Sum(Cantidad) as Cantidad,"
+                        + "new(Orden.Numero) as Orden,CompraDetalle.Sum(Cantidad * Precio) as Total,Descripcion,new(Proveedor.Descripcion) as Proveedor,"
+                        + "Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)",
                     SumaStock = "CompraDetalle.Sum(Cantidad)",
-                    SumaTotal = "CompraDetalle.Sum(Cantidad * Repuesto.Precio)",
+                    SumaTotal = "CompraDetalle.Sum(Cantidad * Precio)",
                 };
             }
         }
@@ -89,9 +89,9 @@ namespace Tach.Models.Helpers {
             get {
                 return new Query {
                     CamposConsulta = "new(Id,Fecha,Descripcion,Direccion,Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,"
-                    + "FechaModificacion,new(Cliente.Id) as Cliente,VentaDetalle.Select(new(Cantidad,new(new(Repuesto.Categoria." 
+                    + "FechaModificacion,new(Cliente.Id) as Cliente,VentaDetalle.Select(new(Cantidad,Precio,Notas,new(new(Repuesto.Categoria." 
                     + "Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,"
-                    + "Repuesto.Epoca,Repuesto.Precio) as Repuesto)) as VentaDetalle)"
+                    + "Repuesto.Epoca) as Repuesto)) as VentaDetalle)"
                 };
             }
         }
@@ -99,11 +99,11 @@ namespace Tach.Models.Helpers {
         public static Query Ventas {
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Fecha,VentaDetalle.Sum(Cantidad) as Cantidad,VentaDetalle.Sum(Cantidad * Repuesto.Precio) "
+                    CamposConsulta = "new(Id,Fecha,VentaDetalle.Sum(Cantidad) as Cantidad,VentaDetalle.Sum(Cantidad * Precio) "
                         + "as Total,Descripcion,Direccion,new(Cliente.Nombres) as Cliente,Estado,UsuarioIngreso,FechaIngreso,"
                         + "UsuarioModificacion,FechaModificacion)",
                     SumaStock = "VentaDetalle.Sum(Cantidad)",
-                    SumaTotal = "VentaDetalle.Sum(Cantidad * Repuesto.Precio)"
+                    SumaTotal = "VentaDetalle.Sum(Cantidad * Precio)"
                 };
             }
         }

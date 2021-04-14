@@ -174,6 +174,9 @@ namespace Tach.Migrations
                         .HasMaxLength(25)
                         .HasColumnType("varchar(25) CHARACTER SET utf8mb4");
 
+                    b.Property<string>("OrdenId")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
+
                     b.Property<string>("ProveedorId")
                         .HasColumnType("varchar(255) CHARACTER SET utf8mb4");
 
@@ -185,6 +188,11 @@ namespace Tach.Migrations
 
                     b.Property<string>("SoldTo")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<string>("TipoDocumento")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4");
 
                     b.Property<string>("UsuarioIngreso")
                         .HasMaxLength(10)
@@ -198,6 +206,8 @@ namespace Tach.Migrations
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OrdenId");
 
                     b.HasIndex("ProveedorId");
 
@@ -214,6 +224,12 @@ namespace Tach.Migrations
 
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
+
+                    b.Property<string>("Notas")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<double>("Precio")
+                        .HasColumnType("double");
 
                     b.HasKey("CompraId", "RepuestoId");
 
@@ -551,6 +567,12 @@ namespace Tach.Migrations
                     b.Property<int>("Cantidad")
                         .HasColumnType("int");
 
+                    b.Property<string>("Notas")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.Property<double>("Precio")
+                        .HasColumnType("double");
+
                     b.HasKey("RepuestoId", "VentaId");
 
                     b.HasIndex("VentaId");
@@ -590,9 +612,15 @@ namespace Tach.Migrations
 
             modelBuilder.Entity("Tach.Models.Entities.Compra", b =>
                 {
+                    b.HasOne("Tach.Models.Entities.Compra", "Orden")
+                        .WithMany()
+                        .HasForeignKey("OrdenId");
+
                     b.HasOne("Tach.Models.Entities.Proveedor", "Proveedor")
                         .WithMany()
                         .HasForeignKey("ProveedorId");
+
+                    b.Navigation("Orden");
 
                     b.Navigation("Proveedor");
                 });

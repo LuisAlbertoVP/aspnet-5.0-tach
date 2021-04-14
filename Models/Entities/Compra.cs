@@ -5,7 +5,11 @@ namespace Tach.Models.Entities {
 
         public Proveedor Proveedor { get; set; }
 
+        public string TipoDocumento { get; set; }
+
         public string Numero { get; set; }
+
+        public Compra Orden { get; set; }
 
         public string Vendedor { get; set; }
 

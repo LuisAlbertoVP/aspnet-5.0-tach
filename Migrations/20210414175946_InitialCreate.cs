@@ -220,7 +220,9 @@ namespace Tach.Migrations
                 {
                     Id = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     ProveedorId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
+                    TipoDocumento = table.Column<string>(type: "varchar(50) CHARACTER SET utf8mb4", maxLength: 50, nullable: false),
                     Numero = table.Column<string>(type: "varchar(25) CHARACTER SET utf8mb4", maxLength: 25, nullable: false),
+                    OrdenId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: true),
                     Vendedor = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     SoldTo = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     ShipTo = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
@@ -236,6 +238,12 @@ namespace Tach.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Compras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Compras_Compras_OrdenId",
+                        column: x => x.OrdenId,
+                        principalTable: "Compras",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Compras_Proveedores_ProveedorId",
                         column: x => x.ProveedorId,
@@ -298,7 +306,9 @@ namespace Tach.Migrations
                 {
                     RepuestoId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     VentaId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false)
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Precio = table.Column<double>(type: "double", nullable: false),
+                    Notas = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -323,7 +333,9 @@ namespace Tach.Migrations
                 {
                     CompraId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
                     RepuestoId = table.Column<string>(type: "varchar(255) CHARACTER SET utf8mb4", nullable: false),
-                    Cantidad = table.Column<int>(type: "int", nullable: false)
+                    Cantidad = table.Column<int>(type: "int", nullable: false),
+                    Precio = table.Column<double>(type: "double", nullable: false),
+                    Notas = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -346,6 +358,11 @@ namespace Tach.Migrations
                 name: "IX_CompraDetalle_RepuestoId",
                 table: "CompraDetalle",
                 column: "RepuestoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Compras_OrdenId",
+                table: "Compras",
+                column: "OrdenId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Compras_ProveedorId",

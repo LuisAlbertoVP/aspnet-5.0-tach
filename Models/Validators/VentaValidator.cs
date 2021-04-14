@@ -8,7 +8,8 @@ namespace Tach.Models.Validators {
             RuleFor(venta => venta.VentaDetalle)
                 .Must(detalles => detalles?.Count > 0)
                 .ForEach(detalles => detalles.Must(detalle => {
-                    return !string.IsNullOrEmpty(detalle.RepuestoId) && detalle.Cantidad > 0;
+                    return !string.IsNullOrEmpty(detalle.RepuestoId) && detalle.Cantidad > 0
+                        && detalle.Precio > 0;
                 }));
         }
     }
