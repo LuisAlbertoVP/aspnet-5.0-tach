@@ -36,10 +36,10 @@ namespace Tach.Models.Helpers {
 
         private string AppendQuery(StringBuilder builder, int cont) {
             if(this.Operador == "contiene") {
-                builder.Append($"{this.Id}.Contains(@{cont})");
+                builder.Append($"({this.Id} != null && {this.Id}.Contains(@{cont}))");
                 return "||";
             } else {
-                builder.Append($"!{this.Id}.Contains(@{cont})");
+                builder.Append($"!({this.Id} != null && {this.Id}.Contains(@{cont}))");
                 return "&&";
             }
         }
