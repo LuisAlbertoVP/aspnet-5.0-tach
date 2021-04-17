@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Tach.Models.Entities {
     public class Proveedor : Entity {
 
@@ -12,6 +14,8 @@ namespace Tach.Models.Entities {
         public string Correo { get; set; }
 
         public string WebSite { get; set; }
+
+        public ICollection<Compra> Compras { get; set; } 
 
     }
 }

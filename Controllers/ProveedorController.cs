@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
@@ -17,6 +18,13 @@ namespace Tach.Controllers
         private readonly TachContext _context;
 
         public ProveedorController(TachContext context) => _context = context;
+
+        [HttpGet("{id}/compras")]
+        public async Task<IActionResult> GetCompras(string id) {
+            var compras = await _context.Compras.Where("Estado == true").Where("Proveedor.Id == @0", id).OrderBy("Fecha")
+                .Select(QueryBuilder.ComprasProveedor.CamposConsulta).ToDynamicArrayAsync();
+            return Ok(compras);
+        }
 
 
         [HttpPost("all")]

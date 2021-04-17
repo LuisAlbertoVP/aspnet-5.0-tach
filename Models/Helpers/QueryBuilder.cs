@@ -34,6 +34,16 @@ namespace Tach.Models.Helpers {
                 };
             }
         }
+        
+        public static Query ComprasProveedor {
+            get {
+                return new Query {
+                    CamposConsulta = "new(Fecha,TipoDocumento,Numero,CompraDetalle.Select(new(Cantidad,new(Repuesto.Codigo,Repuesto.Modelo,"
+                    + "Repuesto.Precio,new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca) as "
+                    + "Repuesto)) as CompraDetalle)"
+                };
+            }
+        }
 
         public static Query Clientes { 
             get {
@@ -48,8 +58,17 @@ namespace Tach.Models.Helpers {
         public static Query Proveedores { 
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Descripcion,Telefono,Direccion,Correo,WebSite,Estado,UsuarioIngreso,FechaIngreso,"
-                        + "UsuarioModificacion,FechaModificacion)"
+                    CamposConsulta = "new(Id,Descripcion,Telefono,Direccion,Correo,WebSite,Estado,Compras.Sum(CompraDetalle.Sum(Cantidad)) "
+                        + "as TotalCompras,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)"
+                }; 
+            }
+        }
+
+        public static Query ReporteRepuesto { 
+            get {
+                return new Query {
+                    CamposConsulta = "new(CompraDetalle.Select(new(Cantidad,new(Compra.Fecha,Compra.TipoDocumento,Compra.Numero) as Compra))"
+                        + " as CompraDetalle,VentaDetalle.Select(new(Cantidad,new(Venta.Fecha,Venta.Direccion) as Venta)) as VentaDetalle)"
                 }; 
             }
         }
@@ -104,6 +123,16 @@ namespace Tach.Models.Helpers {
                         + "UsuarioModificacion,FechaModificacion)",
                     SumaStock = "VentaDetalle.Sum(Cantidad)",
                     SumaTotal = "VentaDetalle.Sum(Cantidad * Precio)"
+                };
+            }
+        }
+
+        public static Query VentasCliente {
+            get {
+                return new Query {
+                    CamposConsulta = "new(Fecha,Direccion,VentaDetalle.Select(new(Cantidad,new(Repuesto.Codigo,Repuesto.Modelo,"
+                    + "Repuesto.Precio,new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca) "
+                    + "as Repuesto)) as VentaDetalle)"
                 };
             }
         }

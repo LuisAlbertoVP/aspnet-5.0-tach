@@ -5,7 +5,7 @@ namespace Tach.Models.Entities {
 
         public string TipoCliente { get; set; }
 
-        public ICollection<Venta> Ventas { get; set; } 
+        public ICollection<Venta> Ventas { get; set; }
         
     }
 }
