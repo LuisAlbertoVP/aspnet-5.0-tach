@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
@@ -27,14 +28,15 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Rol rol) {
             if(new RolValidator().Validate(rol).IsValid) {
+                var count = _context.Roles.Where("Id == @0", rol.Id).Count();
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddRol({0})", JSON.Parse<Rol>(rol));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Rol actualizado correctamente" });
+                    return Ok(new Mensaje { Texto = "Rol " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Rol no actualizado");
+                    return BadRequest(count == 0 ? "Rol no registrado" : "Rol no actualizado");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");
@@ -47,7 +49,7 @@ namespace Tach.Controllers
             if(newRol != null) {
                 newRol.Estado = rol.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = rol.Estado ? "Rol restaurado" : "Rol reclidado" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = rol.Estado ? "Rol restaurado" : "Rol reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El rol no existe");
@@ -59,7 +61,7 @@ namespace Tach.Controllers
             if(newRol != null) {
                 newRol.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = "Rol eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Mensaje { Texto = "Rol eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El rol no existe");
         }

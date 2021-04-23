@@ -1,4 +1,5 @@
 using System;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Tach.Models.Entities;
 using Tach.Models.Helpers;
@@ -27,14 +28,15 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Categoria categoria) {
             if(new CategoriaValidator().Validate(categoria).IsValid) {
+                var count = _context.Categorias.Where("Id == @0", categoria.Id).Count();
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddCategoria({0})", JSON.Parse<Categoria>(categoria));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Categoría actualizada correctamente" });
+                    return Ok(new Mensaje { Texto = "Categoría " + (count == 0 ? "registrada" : "actualizada") + " correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Categoría no actualizada");
+                    return BadRequest(count == 0 ? "Categoría no registrada" : "Categoría no actualizada");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");
@@ -47,7 +49,7 @@ namespace Tach.Controllers
             if(newCategoria != null) {
                 newCategoria.Estado = categoria.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = categoria.Estado ? "Categoría restaurada" : "Categoría reciclada" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = categoria.Estado ? "Categoría restaurada" : "Categoría reciclada" }) : 
                     StatusCode(304);
             }
             return NotFound("La categoría no existe");
@@ -59,7 +61,7 @@ namespace Tach.Controllers
             if(newCategoria != null) {
                 newCategoria.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = "Categoría eliminada correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Mensaje { Texto = "Categoría eliminada correctamente" }) : StatusCode(304);
             }
             return NotFound("La categoría no existe");
         }

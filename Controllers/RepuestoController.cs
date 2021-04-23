@@ -55,14 +55,15 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Repuesto repuesto) {
             if(new RepuestoValidator().Validate(repuesto).IsValid) {
+                var count = _context.Repuestos.Where("Id == @0", repuesto.Id).Count();
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddRepuesto({0})", JSON.Parse<Repuesto>(repuesto));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Repuesto actualizado correctamente" });
+                    return Ok(new Mensaje { Texto = "Repuesto " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Repuesto no actualizado");
+                    return BadRequest(count == 0 ? "Repuesto no registrado" : "Repuesto no actualizado");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");
@@ -75,7 +76,7 @@ namespace Tach.Controllers
             if(newRepuesto != null) {
                 newRepuesto.Estado = repuesto.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = repuesto.Estado ?  "Repuesto restaurado" : "Repuesto reclidado" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = repuesto.Estado ?  "Repuesto restaurado" : "Repuesto reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El repuesto no existe");
@@ -87,7 +88,7 @@ namespace Tach.Controllers
             if(newRepuesto != null) {
                 newRepuesto.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = "Repuesto eliminado correctamente"}) : StatusCode(304);
+                return result > 0 ? Ok(new Mensaje { Texto = "Repuesto eliminado correctamente"}) : StatusCode(304);
             }
             return NotFound("El repuesto no existe");
         }

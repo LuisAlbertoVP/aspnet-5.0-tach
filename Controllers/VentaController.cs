@@ -38,14 +38,15 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Venta venta) {
             if(new VentaValidator().Validate(venta).IsValid) {
+                var count = _context.Ventas.Where("Id == @0", venta.Id).Count();
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddVenta({0})", JSON.Parse<Venta>(venta));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Venta actualizada correctamente" });
+                    return Ok(new Mensaje { Texto = "Venta " + (count == 0 ? "registrada" : "actualizada") + " correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Venta no actualizada");
+                    return BadRequest(count == 0 ? "Venta no registrada" : "Venta no actualizada");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");
@@ -58,7 +59,7 @@ namespace Tach.Controllers
             if(newVenta != null) {
                 newVenta.Estado = venta.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = venta.Estado ?  "Venta restaurada" : "Venta reclidada" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = venta.Estado ?  "Venta restaurada" : "Venta reclidada" }) : 
                     StatusCode(304);
             }
             return NotFound("La venta no existe");

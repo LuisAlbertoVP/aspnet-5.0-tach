@@ -35,14 +35,15 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Proveedor proveedor) {
             if(new ProveedorValidator().Validate(proveedor).IsValid) {
+                var count = _context.Proveedores.Where("Id == @0", proveedor.Id).Count();
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddProveedor({0})", JSON.Parse<Proveedor>(proveedor));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Proveedor actualizado correctamente" });
+                    return Ok(new Mensaje { Texto = "Proveedor " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Proveedor no actualizado");
+                    return BadRequest(count == 0 ? "Proveedor no registrado" : "Proveedor no actualizado");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");
@@ -55,7 +56,7 @@ namespace Tach.Controllers
             if(newProveedor != null) {
                 newProveedor.Estado = proveedor.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = proveedor.Estado ? "Proveedor restaurado" : "Proveedor reclidado" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = proveedor.Estado ? "Proveedor restaurado" : "Proveedor reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El proveedor no existe");
@@ -67,7 +68,7 @@ namespace Tach.Controllers
             if(newProveedor != null) {
                 newProveedor.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = "Proveedor eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Mensaje { Texto = "Proveedor eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El proveedor no existe");
         }

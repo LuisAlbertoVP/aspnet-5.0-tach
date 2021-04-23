@@ -32,7 +32,7 @@ namespace Tach.Controllers
                     var compra = await _context.Compras.FindAsync(id);
                     compra.Ruta = null;
                     await _context.SaveChangesAsync(); 
-                    return Ok(new Respuesta { Result = "Archivo eliminado correctamente" });
+                    return Ok(new Mensaje { Texto = "Archivo eliminado correctamente" });
                 }
                 return NotFound("El archivo no existe");
             }
@@ -123,7 +123,7 @@ namespace Tach.Controllers
             if(newCompra != null) {
                 newCompra.Estado = compra.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = compra.Estado ?  "Compra restaurada" : "Compra reciclada" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = compra.Estado ?  "Compra restaurada" : "Compra reciclada" }) : 
                     StatusCode(304);
             }
             return NotFound("La compra no existe");

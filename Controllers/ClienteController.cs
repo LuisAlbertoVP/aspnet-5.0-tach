@@ -35,14 +35,15 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Cliente cliente) {
             if(new ClienteValidator().Validate(cliente).IsValid) {
+                var count = _context.Clientes.Where("Id == @0", cliente.Id).Count();
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddCliente({0})", JSON.Parse<Cliente>(cliente));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Cliente actualizado correctamente" });
+                    return Ok(new Mensaje { Texto = "Cliente " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Cliente no actualizado");
+                    return BadRequest(count == 0 ? "Cliente no registrado" : "Cliente no actualizado");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");
@@ -55,7 +56,7 @@ namespace Tach.Controllers
             if(newCliente != null) {
                 newCliente.Estado = cliente.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = cliente.Estado ? "Cliente restaurado" : "Cliente reclidado" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = cliente.Estado ? "Cliente restaurado" : "Cliente reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El cliente no existe");
@@ -67,7 +68,7 @@ namespace Tach.Controllers
             if(newCliente != null) {
                 newCliente.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = "Cliente eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Mensaje { Texto = "Cliente eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El cliente no existe");
         }

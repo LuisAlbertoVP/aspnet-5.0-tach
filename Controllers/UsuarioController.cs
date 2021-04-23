@@ -35,14 +35,15 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Usuario usuario) {
             if(new UsuarioValidator().Validate(usuario).IsValid) {
+                var count = _context.Usuarios.Where("Id == @0", usuario.Id).Count();
                 using var transaction = _context.Database.BeginTransaction();
                 try {
                     _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", JSON.Parse<Usuario>(usuario));
                     transaction.Commit();
-                    return Ok(new Respuesta { Result = "Usuario actualizado correctamente" });
+                    return Ok(new Mensaje { Texto = "Usuario " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
                 } catch (Exception) {
                     transaction.Rollback();
-                    return BadRequest("Usuario no actualizado");
+                    return BadRequest(count == 0 ? "Usuario no registrado" : "Usuario no actualizado");
                 }
             } else {
                 return BadRequest("Algunos campos no son válidos");
@@ -55,7 +56,7 @@ namespace Tach.Controllers
             if(newUsuario != null) {
                 newUsuario.Estado = usuario.Estado;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = usuario.Estado ? "Usuario restaurado" : "Usuario reclidado" }) : 
+                return result > 0 ? Ok(new Mensaje { Texto = usuario.Estado ? "Usuario restaurado" : "Usuario reclidado" }) : 
                     StatusCode(304);
             }
             return NotFound("El usuario no existe");
@@ -67,7 +68,7 @@ namespace Tach.Controllers
             if(newUsuario != null) {
                 newUsuario.EstadoTabla = false;
                 int result = await _context.SaveChangesAsync();
-                return result > 0 ? Ok(new Respuesta { Result = "Usuario eliminado correctamente" }) : StatusCode(304);
+                return result > 0 ? Ok(new Mensaje { Texto = "Usuario eliminado correctamente" }) : StatusCode(304);
             }
             return NotFound("El usuario no existe");
         }
