@@ -55,19 +55,21 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Repuesto repuesto) {
             if(new RepuestoValidator().Validate(repuesto).IsValid) {
-                var count = _context.Repuestos.Where("Id == @0", repuesto.Id).Count();
-                using var transaction = _context.Database.BeginTransaction();
-                try {
-                    _context.Database.ExecuteSqlRaw("CALL AddRepuesto({0})", JSON.Parse<Repuesto>(repuesto));
-                    transaction.Commit();
-                    return Ok(new Mensaje { Texto = "Repuesto " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
-                } catch (Exception) {
-                    transaction.Rollback();
-                    return BadRequest(count == 0 ? "Repuesto no registrado" : "Repuesto no actualizado");
+                if(_context.Repuestos.Where("Id != @0 && Codigo == @1", repuesto.Id, repuesto.Codigo).Count() == 0) {
+                    var count = _context.Repuestos.Where("Id == @0", repuesto.Id).Count();
+                    using var transaction = _context.Database.BeginTransaction();
+                    try {
+                        _context.Database.ExecuteSqlRaw("CALL AddRepuesto({0})", JSON.Parse<Repuesto>(repuesto));
+                        transaction.Commit();
+                        return Ok(new Mensaje { Texto = "Repuesto " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
+                    } catch (Exception) {
+                        transaction.Rollback();
+                        return BadRequest(count == 0 ? "Repuesto no registrado" : "Repuesto no actualizado");
+                    }
                 }
-            } else {
-                return BadRequest("Algunos campos no son válidos");
+                return BadRequest("El código ya existe");
             }
+            return BadRequest("Algunos campos no son válidos");
         }
 
         [HttpPost("{id}/status")]

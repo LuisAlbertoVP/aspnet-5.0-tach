@@ -35,8 +35,7 @@ namespace Tach.Controllers
                     return Ok(new Mensaje { Texto = "Archivo eliminado correctamente" });
                 }
                 return NotFound("El archivo no existe");
-            }
-            catch(Exception) {
+            } catch(Exception) {
                 return StatusCode(500, "Error interno del servidor");
             }
         }
@@ -56,8 +55,7 @@ namespace Tach.Controllers
                     return File(memory, mimeType, Path.GetFileName(filePath));
                 }
                 return NotFound();
-            }
-            catch(Exception) {
+            } catch(Exception) {
                 return StatusCode(500, "Error interno del servidor");
             }
         }
@@ -76,9 +74,8 @@ namespace Tach.Controllers
                         await file.CopyToAsync(stream);
                     }
                     return Ok();
-                } else {
-                    return BadRequest("El archivo no tiene contenido");
                 }
+                return BadRequest("El archivo no tiene contenido");
             } catch(Exception) {
                 return StatusCode(500, "Error interno del servidor");
             }
@@ -112,9 +109,8 @@ namespace Tach.Controllers
                     transaction.Rollback();
                     return BadRequest("Compra no actualizada");
                 }
-            } else {
-                return BadRequest("Algunos campos no son válidos");
             }
+            return BadRequest("Algunos campos no son válidos");
         }
 
         [HttpPost("{id}/status")]

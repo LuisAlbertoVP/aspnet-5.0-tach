@@ -31,12 +31,12 @@ namespace Tach.Controllers
         public IActionResult Login(Usuario usuario) {
             if(new UsuarioNoAuthValidator().Validate(usuario).IsValid) {
                 usuario = _context.Usuarios.Where("NombreUsuario == @0 && Clave == @1", usuario.NombreUsuario, usuario.Clave).FirstOrDefault();
-                if(usuario != null)
-                    return usuario.EstadoTabla && usuario.Estado ? CreateToken(usuario) : StatusCode(403, "Cuenta de usuario desactivada");  
+                if(usuario != null) {
+                    return usuario.EstadoTabla && usuario.Estado ? CreateToken(usuario) : StatusCode(403, "Cuenta de usuario desactivada");
+                }
                 return Unauthorized("Las credenciales son incorrectas");
-            } else {
-                return BadRequest("Algunos campos no son válidos");
             }
+            return BadRequest("Algunos campos no son válidos");
         }
 
         public IActionResult CreateToken(Usuario user) {
@@ -64,18 +64,20 @@ namespace Tach.Controllers
         [HttpPost("cuenta")]
         public IActionResult CrearCuenta(Usuario usuario) {
             if(new CuentaValidator().Validate(usuario).IsValid) {
-                using var transaction = _context.Database.BeginTransaction();
-                try {
-                    _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", JSON.Parse<Usuario>(usuario));
-                    transaction.Commit();
-                    return Ok(new Mensaje { Texto = "La cuenta ha sido creada satisfactoriamente, solicite su activación" });
-                } catch (Exception) {
-                    transaction.Rollback();
-                    return BadRequest("La cuenta no ha sido creada");
+                if(_context.Usuarios.Where("Id != @0 && NombreUsuario == @1", usuario.Id, usuario.NombreUsuario).Count() == 0) {
+                    using var transaction = _context.Database.BeginTransaction();
+                    try {
+                        _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", JSON.Parse<Usuario>(usuario));
+                        transaction.Commit();
+                        return Ok(new Mensaje { Texto = "La cuenta ha sido creada satisfactoriamente, solicite su activación" });
+                    } catch (Exception) {
+                        transaction.Rollback();
+                        return BadRequest("La cuenta no ha sido creada");
+                    }
                 }
-            } else {
-                return BadRequest("Algunos campos no son válidos");
+                return BadRequest("El nombre de usuario ya existe");
             }
+            return BadRequest("Algunos campos no son válidos");
         }
 
         [HttpPost("cuenta/update")]
@@ -91,9 +93,8 @@ namespace Tach.Controllers
                     transaction.Rollback();
                     return BadRequest("Cuenta no actualizada");
                 }
-            } else {
-                return BadRequest("Algunos campos no son válidos");
             }
+            return BadRequest("Algunos campos no son válidos");
         }
 
         [HttpGet("cuenta/{id}")]
@@ -102,9 +103,7 @@ namespace Tach.Controllers
             var usuario = await _context.Usuarios.Where("Estado == true").Where("EstadoTabla == true").Where("Id == @0", id)
                 .Select<Usuario>("new(Id,NombreUsuario,Nombres,Cedula,Direccion,Telefono,Celular,FechaNacimiento,Correo)")
                 .FirstOrDefaultAsync();
-            if(usuario != null)
-                return Ok(usuario);
-            return NotFound("No existe usuario");
+            return usuario != null ? Ok(usuario) : NotFound("No existe usuario");
         }
 
         [HttpGet("cuenta/{id}/roles")]

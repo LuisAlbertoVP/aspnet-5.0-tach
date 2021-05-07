@@ -35,19 +35,21 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Usuario usuario) {
             if(new UsuarioValidator().Validate(usuario).IsValid) {
-                var count = _context.Usuarios.Where("Id == @0", usuario.Id).Count();
-                using var transaction = _context.Database.BeginTransaction();
-                try {
-                    _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", JSON.Parse<Usuario>(usuario));
-                    transaction.Commit();
-                    return Ok(new Mensaje { Texto = "Usuario " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
-                } catch (Exception) {
-                    transaction.Rollback();
-                    return BadRequest(count == 0 ? "Usuario no registrado" : "Usuario no actualizado");
+                if(_context.Usuarios.Where("Id != @0 && NombreUsuario == @1", usuario.Id, usuario.NombreUsuario).Count() == 0) {
+                    var count = _context.Usuarios.Where("Id == @0", usuario.Id).Count();
+                    using var transaction = _context.Database.BeginTransaction();
+                    try {
+                        _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", JSON.Parse<Usuario>(usuario));
+                        transaction.Commit();
+                        return Ok(new Mensaje { Texto = "Usuario " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
+                    } catch (Exception) {
+                        transaction.Rollback();
+                        return BadRequest(count == 0 ? "Usuario no registrado" : "Usuario no actualizado");
+                    }
                 }
-            } else {
-                return BadRequest("Algunos campos no son válidos");
+                return BadRequest("El nombre de usuario ya existe");
             }
+            return BadRequest("Algunos campos no son válidos");
         }
 
         [HttpPost("{id}/status")]

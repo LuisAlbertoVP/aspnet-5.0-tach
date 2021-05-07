@@ -45,9 +45,8 @@ namespace Tach.Controllers
                     transaction.Rollback();
                     return BadRequest(count == 0 ? "Cliente no registrado" : "Cliente no actualizado");
                 }
-            } else {
-                return BadRequest("Algunos campos no son válidos");
             }
+            return BadRequest("Algunos campos no son válidos");
         }
 
         [HttpPost("{id}/status")]
