@@ -6,6 +6,7 @@ namespace Tach.Models.Validators {
         public CompraValidator() : base() {
             RuleFor(compra => compra.TipoDocumento).NotNull().MaximumLength(50);
             RuleFor(compra => compra.Numero).NotNull().MaximumLength(25);
+            RuleFor(compra => compra.Orden).MaximumLength(25);
             RuleFor(compra => compra.CompraDetalle)
                 .Must(detalles => detalles?.Count > 0)
                 .ForEach(detalles => detalles.Must(detalle => {

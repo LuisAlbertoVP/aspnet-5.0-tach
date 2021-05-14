@@ -88,7 +88,7 @@ namespace Tach.Controllers
             var proveedores = await _context.Proveedores.Where("Estado == true && EstadoTabla == true").OrderBy("Descripcion")
                 .Select("new(Id,Descripcion)").ToDynamicArrayAsync();
             var ordenes = await _context.Compras.Where("Estado == true").Where("TipoDocumento == @0", "Orden").OrderBy("Numero")
-                .Select("new(Id,Numero)").ToDynamicArrayAsync();
+                .Select("new(Numero)").ToDynamicArrayAsync();
             return Ok(new { compra = compra, proveedores = proveedores, ordenes = ordenes });
         }
 

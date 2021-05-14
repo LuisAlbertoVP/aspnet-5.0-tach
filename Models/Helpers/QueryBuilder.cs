@@ -16,8 +16,8 @@ namespace Tach.Models.Helpers {
             get {
                 return new Query {
                     CamposConsulta = "new(Id,Fecha,TipoDocumento,Numero,Vendedor,SoldTo,ShipTo,Ruta,Descripcion,Estado,UsuarioIngreso,FechaIngreso,"
-                        + "UsuarioModificacion,FechaModificacion,new(Orden.Id) as Orden,new(Proveedor.Id) as Proveedor,CompraDetalle.Select(new(" 
-                        + "Cantidad,Precio,Notas,new(new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,"
+                        + "UsuarioModificacion,FechaModificacion,Orden,new(Proveedor.Id) as Proveedor,CompraDetalle.Select(new(Cantidad," 
+                        + "Precio,Notas,new(new(Repuesto.Categoria.Descripcion) as Categoria,new(Repuesto.Marca.Descripcion) as Marca,"
                         + "Repuesto.Id,Repuesto.Codigo,Repuesto.Modelo,Repuesto.Epoca) as Repuesto)) as CompraDetalle)"
                 };
             }
@@ -27,7 +27,7 @@ namespace Tach.Models.Helpers {
             get {
                 return new Query {
                     CamposConsulta = "new(Id,Fecha,TipoDocumento,Numero,Vendedor,SoldTo,ShipTo,Ruta,CompraDetalle.Sum(Cantidad) as Cantidad,"
-                        + "new(Orden.Numero) as Orden,CompraDetalle.Sum(Cantidad * Precio) as Total,Descripcion,new(Proveedor.Descripcion) as Proveedor,"
+                        + "Orden,CompraDetalle.Sum(Cantidad * Precio) as Total,Descripcion,new(Proveedor.Descripcion) as Proveedor,"
                         + "Estado,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)",
                     SumaStock = "CompraDetalle.Sum(Cantidad)",
                     SumaTotal = "CompraDetalle.Sum(Cantidad * Precio)",

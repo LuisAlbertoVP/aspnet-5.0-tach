@@ -9,7 +9,7 @@ namespace Tach.Models.Entities {
 
         public string Numero { get; set; }
 
-        public Compra Orden { get; set; }
+        public string Orden { get; set; }
 
         public string Vendedor { get; set; }
 
