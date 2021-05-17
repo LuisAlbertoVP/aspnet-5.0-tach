@@ -39,7 +39,7 @@ namespace Tach.Controllers
                     var count = _context.Usuarios.Where("Id == @0", usuario.Id).Count();
                     using var transaction = _context.Database.BeginTransaction();
                     try {
-                        _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", JSON.Parse<Usuario>(usuario));
+                        _context.Database.ExecuteSqlRaw("CALL AddUsuario({0})", JSON.Parse<Usuario>(Crypto.HashPassword(usuario)));
                         transaction.Commit();
                         return Ok(new Mensaje { Texto = "Usuario " + (count == 0 ? "registrado" : "actualizado") + " correctamente" });
                     } catch (Exception) {

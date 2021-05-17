@@ -30,9 +30,11 @@ namespace Tach.Controllers
         [HttpPost("login")]
         public IActionResult Login(Usuario usuario) {
             if(new UsuarioNoAuthValidator().Validate(usuario).IsValid) {
-                usuario = _context.Usuarios.Where("NombreUsuario == @0 && Clave == @1", usuario.NombreUsuario, usuario.Clave).FirstOrDefault();
+                usuario = _context.Usuarios.Where("NombreUsuario == @0", usuario.NombreUsuario)
+                    .Where("Clave == @0" , Crypto.HashPassword(usuario.Clave)).FirstOrDefault();
                 if(usuario != null) {
-                    return usuario.EstadoTabla && usuario.Estado ? CreateToken(usuario) : StatusCode(403, "Cuenta de usuario desactivada");
+                    return usuario.EstadoTabla && usuario.Estado ? CreateToken(usuario) : 
+                        StatusCode(403, "Cuenta de usuario desactivada");
                 }
                 return Unauthorized("Las credenciales son incorrectas");
             }
@@ -67,7 +69,7 @@ namespace Tach.Controllers
                 if(_context.Usuarios.Where("Id != @0 && NombreUsuario == @1", usuario.Id, usuario.NombreUsuario).Count() == 0) {
                     using var transaction = _context.Database.BeginTransaction();
                     try {
-                        _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", JSON.Parse<Usuario>(usuario));
+                        _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", JSON.Parse<Usuario>(Crypto.HashPassword(usuario)));
                         transaction.Commit();
                         return Ok(new Mensaje { Texto = "La cuenta ha sido creada satisfactoriamente, solicite su activación" });
                     } catch (Exception) {
@@ -86,7 +88,7 @@ namespace Tach.Controllers
             if(new CuentaValidator().Validate(usuario).IsValid) {
                 using var transaction = _context.Database.BeginTransaction();
                 try {
-                    _context.Database.ExecuteSqlRaw("CALL UpdateAccount({0})", JSON.Parse<Usuario>(usuario));
+                    _context.Database.ExecuteSqlRaw("CALL UpdateAccount({0})", JSON.Parse<Usuario>(Crypto.HashPassword(usuario)));
                     transaction.Commit();
                     return Ok(new Mensaje { Texto = "Cuenta actualizada correctamente" });
                 } catch (Exception) {
