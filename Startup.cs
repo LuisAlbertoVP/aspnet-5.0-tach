@@ -35,7 +35,7 @@ namespace Tach {
                 };
             });
             services.AddDbContext<TachContext>(options => {
-                options.UseMySql(Configuration.GetConnectionString("TachDatabase"), ServerVersion.FromString("10.3.25-mariadb"), 
+                options.UseMySql(Configuration.GetConnectionString("TachDatabase"), new MariaDbServerVersion(new Version(10, 3, 25)), 
                     o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SingleQuery));
             });
             services.AddSingleton<IAuthorizationPolicyProvider, HasPermissionProvider>();
