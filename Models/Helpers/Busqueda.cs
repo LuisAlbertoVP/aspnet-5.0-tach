@@ -19,7 +19,7 @@ namespace Tach.Models.Helpers {
 
         public bool Estado { get; set; }
 
-        public string OperadorLogico { get; set; }
+        public string Operador { get; set; }
 
         public async Task<Model> BuildModel<T>(IQueryable<T> queryable, Query query, bool estadoTabla = true) {
             var builder = new StringBuilder();
@@ -32,7 +32,7 @@ namespace Tach.Models.Helpers {
                 .Append('(');
             for(var i = 0; i < this.Filtros.Length; i++) {
                 if(i > 0) {
-                    builder.Append(this.OperadorLogico);
+                    builder.Append(this.Operador);
                 }
                 filtros.AddRange(this.Filtros[i].AddFiltro(builder, ref cont));
             }
