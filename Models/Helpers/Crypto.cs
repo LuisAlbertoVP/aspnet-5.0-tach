@@ -14,7 +14,9 @@ namespace Tach.Models.Helpers {
         }
 
         public static Usuario HashPassword(Usuario usuario) {
-            usuario.Clave = HashPassword(usuario.Clave);
+            if(!string.IsNullOrEmpty(usuario.Clave)) {
+                usuario.Clave = HashPassword(usuario.Clave);
+            }
             return usuario;
         }
     }

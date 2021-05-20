@@ -24,7 +24,6 @@ namespace Tach.Controllers
         [HttpGet("{id}/reporte")]
         public async Task<IActionResult> GetReporte(string id) {
             var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Id == @0", id)
-                .Where("CompraDetalle.All(Compra.Estado == true)").Where("VentaDetalle.All(Venta.Estado == true)")
                 .Select(QueryBuilder.ReporteRepuesto.CamposConsulta)
                 .FirstOrDefaultAsync();
             return Ok(repuesto);

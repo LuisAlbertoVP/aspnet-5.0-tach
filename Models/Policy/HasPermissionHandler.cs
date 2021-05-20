@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using Tach.Models.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authorization;
 
@@ -21,19 +20,12 @@ namespace Tach.Models.Policy {
             var id = context.User.FindFirst(c => c.Type == "Id").Value;
             using var scope = _serviceProvider.CreateScope();
             var _context = scope.ServiceProvider.GetRequiredService<TachContext>();
-            var usuario = _context.Usuarios.Where("Estado == true").Where("EstadoTabla == true").Where("Id == @0", id)
-                .Select(u => new Usuario { 
-                    Roles = u.Roles.Where(r => r.Estado == true && r.EstadoTabla == true).Select(r => new Rol { Modulos = r.Modulos }).ToList()
-                }).FirstOrDefault();
-            if(usuario != null) {
-                foreach(var rol in usuario.Roles) {
-                    foreach(var modulo in rol.Modulos) {
-                        if (modulo.Descripcion == requirement.Permission) {
-                            context.Succeed(requirement);
-                            return Task.CompletedTask;
-                        }            
-                    }
-                }
+            var cantidadPermisos = _context.Usuarios.Where("Id == @0", id).Where("Estado == true && EstadoTabla == true")
+                .Where("Roles.Any(Estado == true && EstadoTabla == true && Modulos.Any(Descripcion.Contains(@0)))", requirement.Permission)
+                .Count();
+            if(cantidadPermisos > 0) {
+                context.Succeed(requirement);
+                return Task.CompletedTask;
             }
             return Task.CompletedTask;
         }

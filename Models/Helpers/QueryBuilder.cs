@@ -49,7 +49,7 @@ namespace Tach.Models.Helpers {
             get {
                 return new Query {
                     CamposConsulta = "new(Id,Nombres,Cedula,Direccion,Telefono,Celular,FechaNacimiento,Correo,TipoCliente,Estado,"
-                        + "Ventas.Sum(VentaDetalle.Sum(Cantidad)) as TotalVentas,UsuarioIngreso,FechaIngreso,"
+                        + "Ventas.Where(Estado==true).Sum(VentaDetalle.Sum(Cantidad)) as TotalVentas,UsuarioIngreso,FechaIngreso,"
                         + "UsuarioModificacion,FechaModificacion)",
                 };
             }
@@ -58,8 +58,8 @@ namespace Tach.Models.Helpers {
         public static Query Proveedores { 
             get {
                 return new Query {
-                    CamposConsulta = "new(Id,Descripcion,Telefono,Direccion,Correo,WebSite,Estado,Compras.Sum(CompraDetalle.Sum(Cantidad)) "
-                        + "as TotalCompras,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)"
+                    CamposConsulta = "new(Id,Descripcion,Telefono,Direccion,Correo,WebSite,Estado,Compras.Where(Estado==true).Sum("
+                        + "CompraDetalle.Sum(Cantidad)) as TotalCompras,UsuarioIngreso,FechaIngreso,UsuarioModificacion,FechaModificacion)"
                 }; 
             }
         }
@@ -67,8 +67,9 @@ namespace Tach.Models.Helpers {
         public static Query ReporteRepuesto { 
             get {
                 return new Query {
-                    CamposConsulta = "new(CompraDetalle.Select(new(Cantidad,new(Compra.Fecha,Compra.TipoDocumento,Compra.Numero) as Compra))"
-                        + " as CompraDetalle,VentaDetalle.Select(new(Cantidad,new(Venta.Fecha,Venta.Direccion) as Venta)) as VentaDetalle)"
+                    CamposConsulta = "new(CompraDetalle.Where(Compra.Estado==true).Select(new(Cantidad,new(Compra.Id,Compra.Fecha,"
+                        + "Compra.TipoDocumento,Compra.Numero) as Compra)) as CompraDetalle,VentaDetalle.Where(Venta.Estado==true)."
+                        + "Select(new(Cantidad,new(Venta.Id,Venta.Fecha,Venta.Direccion) as Venta)) as VentaDetalle)"
                 }; 
             }
         }
