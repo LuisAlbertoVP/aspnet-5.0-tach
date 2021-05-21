@@ -80,7 +80,7 @@ namespace Tach
             modelBuilder.Entity<Rol>().Property(r => r.Descripcion).IsRequired().HasMaxLength(50);
             modelBuilder.ApplyConfiguration(new EntityTypeConfiguration<Rol>());
 
-            modelBuilder.Entity<Usuario>().Property(u => u.NombreUsuario).IsRequired().HasMaxLength(10);
+            modelBuilder.Entity<Usuario>().Property(u => u.NombreUsuario).IsRequired().HasMaxLength(25);
             modelBuilder.Entity<Usuario>().Property(u => u.Clave).IsRequired();
             modelBuilder.Entity<Usuario>().Property(u => u.FechaContratacion).IsRequired().HasColumnType("date");
             modelBuilder.ApplyConfiguration(new PersonTypeConfiguration<Usuario>());
