@@ -30,13 +30,16 @@ namespace Tach.Controllers
         [HttpPost("login")]
         public IActionResult Login(Usuario usuario) {
             if(new UsuarioNoAuthValidator().Validate(usuario).IsValid) {
-                usuario = _context.Usuarios.Where("NombreUsuario == @0", usuario.NombreUsuario)
-                    .Where("Clave == @0" , Crypto.HashPassword(usuario.Clave)).FirstOrDefault();
-                if(usuario != null) {
-                    return usuario.EstadoTabla && usuario.Estado ? CreateToken(usuario) : 
-                        StatusCode(403, "Cuenta de usuario desactivada");
+                Usuario result = _context.Usuarios.Where("EstadoTabla == true && NombreUsuario == @0", usuario.NombreUsuario).FirstOrDefault();
+                if(result != null) {
+                    usuario.Clave = Crypto.HashPassword(usuario.Clave);
+                    result = _context.Usuarios.Where("Id == @0 && Clave == @1", result.Id, usuario.Clave).FirstOrDefault();
+                    if(result != null) {
+                        return result.Estado ? CreateToken(result) : StatusCode(403, "Cuenta de usuario desactivada");
+                    }
+                    return Unauthorized("Las credenciales son incorrectas");
                 }
-                return Unauthorized("Las credenciales son incorrectas");
+                return StatusCode(403, "Cuenta de usuario borrada");
             }
             return BadRequest("Algunos campos no son válidos");
         }
@@ -66,7 +69,7 @@ namespace Tach.Controllers
         [HttpPost("cuenta")]
         public IActionResult CrearCuenta(Usuario usuario) {
             if(new CuentaValidator().Validate(usuario).IsValid) {
-                if(_context.Usuarios.Where("Id != @0 && NombreUsuario == @1", usuario.Id, usuario.NombreUsuario).Count() == 0) {
+                if(_context.Usuarios.Where("Id != @0 && NombreUsuario == @1 && EstadoTabla == true", usuario.Id, usuario.NombreUsuario).Count() == 0) {
                     using var transaction = _context.Database.BeginTransaction();
                     try {
                         _context.Database.ExecuteSqlRaw("CALL AddAccount({0})", JSON.Parse<Usuario>(Crypto.HashPassword(usuario)));
@@ -86,15 +89,18 @@ namespace Tach.Controllers
         [Authorize(AuthenticationSchemes="Autenticado")]
         public IActionResult ModificarCuenta(Usuario usuario) {
             if(new CuentaValidator().Validate(usuario).IsValid) {
-                using var transaction = _context.Database.BeginTransaction();
-                try {
-                    _context.Database.ExecuteSqlRaw("CALL UpdateAccount({0})", JSON.Parse<Usuario>(Crypto.HashPassword(usuario)));
-                    transaction.Commit();
-                    return Ok(new Mensaje { Texto = "Cuenta actualizada correctamente" });
-                } catch (Exception) {
-                    transaction.Rollback();
-                    return BadRequest("Cuenta no actualizada");
+                if(_context.Usuarios.Where("Id != @0 && NombreUsuario == @1 && EstadoTabla == true", usuario.Id, usuario.NombreUsuario).Count() == 0) {
+                    using var transaction = _context.Database.BeginTransaction();
+                    try {
+                        _context.Database.ExecuteSqlRaw("CALL UpdateAccount({0})", JSON.Parse<Usuario>(Crypto.HashPassword(usuario)));
+                        transaction.Commit();
+                        return Ok(new Mensaje { Texto = "Cuenta actualizada correctamente" });
+                    } catch (Exception) {
+                        transaction.Rollback();
+                        return BadRequest("Cuenta no actualizada");
+                    }
                 }
+                return BadRequest("El nombre de usuario ya existe");
             }
             return BadRequest("Algunos campos no son válidos");
         }

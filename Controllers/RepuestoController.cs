@@ -46,7 +46,7 @@ namespace Tach.Controllers
         [HttpPost]
         public IActionResult InsertOrUpdate(Repuesto repuesto) {
             if(new RepuestoValidator().Validate(repuesto).IsValid) {
-                if(_context.Repuestos.Where("Id != @0 && Codigo == @1", repuesto.Id, repuesto.Codigo).Count() == 0) {
+                if(_context.Repuestos.Where("Id != @0 && Codigo == @1 && EstadoTabla == true", repuesto.Id, repuesto.Codigo).Count() == 0) {
                     var count = _context.Repuestos.Where("Id == @0", repuesto.Id).Count();
                     using var transaction = _context.Database.BeginTransaction();
                     try {
