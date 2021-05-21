@@ -29,14 +29,6 @@ namespace Tach.Controllers
             return Ok(repuesto);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetRepuesto(string id) {
-            var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
-                .Select("new(Id,Codigo,new(Categoria.Descripcion) as Categoria,new(Marca.Descripcion) as Marca,Modelo,Epoca,Precio)")
-                .FirstOrDefaultAsync();
-            return Ok(repuesto);
-        }
-
         [HttpGet("form")]
         public async Task<IActionResult> GetForm() {
             var categorias = await _context.Categorias.Where("Estado == true && EstadoTabla == true")

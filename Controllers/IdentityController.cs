@@ -116,5 +116,13 @@ namespace Tach.Controllers
                 .FirstOrDefaultAsync();
             return Ok(usuario);
         }
+
+        [HttpGet("cuenta/repuestos/{id}")]
+        public async Task<IActionResult> GetRepuesto(string id) {
+            var repuesto = await _context.Repuestos.Where("Estado == true && EstadoTabla == true").Where("Codigo == @0", id)
+                .Select("new(Id,Codigo,new(Categoria.Descripcion) as Categoria,new(Marca.Descripcion) as Marca,Modelo,Epoca,Precio)")
+                .FirstOrDefaultAsync();
+            return Ok(repuesto);
+        }
     }
 }
